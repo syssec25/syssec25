@@ -87,7 +87,7 @@ python 环境的安装和配置请同学们自行 Google。
 
 ## 4.实验步骤
 
-本实验提供 Log4j2Vul 和 White-Jotter 两个文件夹，[项目下载地址](https://github.com/syssec24/syssec24.github.io)
+本实验提供 Log4j2Vul 和 White-Jotter 两个文件夹，[项目下载地址](https://github.com/syssec25/syssec25)
 
 ### 4.1 本地触发 Log4j 2 漏洞，弹出计算器
 
