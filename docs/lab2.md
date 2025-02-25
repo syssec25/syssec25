@@ -29,7 +29,7 @@ ARM64 支持 EL0-EL3 四个特权级，EL0 特权级最低，EL3 最高。一般
 > ⚠️ 注意 哪些寄存器是在一个函数中可以被随意改写的，哪些是需要保存到栈上之后才能改写的
 
 
-![armv8 reg](https://cataloc.gitee.io/blog/2021/06/03/Armv8%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B/GPRs.png)
+![armv8 reg](img/armv8_reg.png)
 
 
 #### ARM64 指令
@@ -207,12 +207,13 @@ commit_cred 函数用于给当前进程设置新的 cred 结构体。通过调�
 
 本次实验提供了两种方式进行环境配置，任选一种
 
-- VirtualBox 虚拟机（⚠️注意arm mac无法正常运行这个虚拟机，windows可以），虚拟机环境为 Ubuntu20.04，用户名和密码均为 syssec。有两种下载方式
+1.VirtualBox 虚拟机（⚠️注意arm mac无法正常运行这个虚拟机，windows可以），虚拟机环境为 Ubuntu20.04，用户名和密码均为 syssec。
+
   - 点击[天翼网盘链接](https://cloud.189.cn/t/EvY32uzimEbm),访问码：8yzw，下载虚拟机（可以用直链助手生成直链进行下载）
-  - `lab2-virtualbox-env.zip`，需要连接ZJUWLAN，点击[NAS地址](http://222.205.3.209:5000)，账号：syssec23，密码：123456
-- 如果你嫌下载、安装虚拟机麻烦或是arm mac，就下载**不包含虚拟机的源文件** `lab2-source.zip`，有两种下载方式
+
+2.如果你嫌下载、安装虚拟机麻烦或是arm mac，就下载**不包含虚拟机的源文件** `lab2-source.zip`
+
   - 点击[天翼网盘链接](https://cloud.189.cn/web/share?code=zy2ENz7fiUrq)，访问码：xa2r
-  - 需要连接ZJUWLAN，点击[NAS地址](http://222.205.3.209:5000)，账号：syssec23，密码：123456
 
 虚拟机内包含了完成本次实验所需要的各种环境。本次实验的文件保存在虚拟机 `~/lab2`目录中。
 
