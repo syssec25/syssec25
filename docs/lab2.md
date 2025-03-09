@@ -1,430 +1,517 @@
-# Linux内核漏洞攻防 - ROP攻击与防护
+# Linux内核漏洞攻防 - JOP攻击与防护
 
-## 1. 实验目的
+## 1 实验目的
 
-* 了解 ARM64 栈的布局，学习 buffer overflow 漏洞的原理与利用方式
-* 了解 stack canary 与 KASLR 等抵御 buffer overflow 漏洞的原理，并学会如何绕过这些防护机制
-* 学习 return-oriented programming (ROP) 攻击原理，获取 Linux 内核的 root 权限
-* 学习 ARMV8.3 PA (Pointer Authentication)原理，了解 Linux 内核如何利用 PA 机制防止 ROP 攻击
+了解 UAF ( Use-After-Free ) 类型的漏洞以及 JOP ( Jump-oriented programming ) 攻击原理，并在此基础上，通过现有的 UAF 漏洞和 JOP 编程，实现获取 Linux 内核的 root 权限的 PoC (Proof of Concept)，并读取一个只有 root 权限下可读的文件，获取 flag。
 
-## 2.实验工具
+## 2 实验内容
 
-* qemu-system-aarch64
-* gdb-multiarch
-* aarch64-linux-gnu-objdump
-* aarch64-linux-gnu-gcc
+1） 利用 gdb 调试内核，获取内核关键函数和 gadget 的地址。
 
-## 3. 背景介绍
+2） 了解 Linux 设备提供的接口和其调用逻辑，并尝试使用 Linux 设备接口进行基础编程，了解 Linux 如何利用系统调用的方式触发内核设备中相应的函数。
 
-## 3.1 ARM64 汇编
+3） 理解 UAF 漏洞原理，以及漏洞的利用方式；使用 gdb-multiarch 对所提供的未压缩的内核( vmlinux 文件)进行调试，查找设备 UAF 漏洞所在的位置及触发条件，获取内核 `tty_struct` 结构体的内容，并利用设备接口控制该结构体的内容，为 root 内核做准备。
 
-ARM64 支持 EL0-EL3 四个特权级，EL0 特权级最低，EL3 最高。一般情况下，EL1 运行 Linux 内核，EL0 运行用户态程序。
+4） 了解 JOP 攻击的原理，尝试利用设备接口触发 UAF 漏洞，并挟持控制流，通过 JOP 攻击绕过 PXN 机制，获取内核的 root 权限。
 
-#### ARM64 寄存器
+5） 利用提供的 gadget 片段，构造 JOP 攻击跳转链，获取 root 权限的 shell。
 
-* 31个通用寄存器，每个寄存器都为 64bit 大小，可以通过 x0-x30 访问，同时可以通过 w0-w30 来访问这些寄存器的低32位。其中，x29寄存器(fp)用于保存栈帧基地址，x30寄存器也叫link register（lr），用于保存返回上一个函数的返回地址。
-* XZR（值始终为0，WZR 对应32位零寄存器），SP（栈指针），PC（程序计数器）。其中，SP 为逻辑寄存器，会映射到 SP_ELx （0 <= x <= 3）四个寄存器上。根据 PSTATE.SPSel 决定当前使用的物理寄存器。一般来说，用户态程序位于EL0，使用 SP_EL0；内核位于 EL1，使用 SP_EL1。
-* PSTATE，SP_ELx 等系统寄存器。
+## 3 实验环境
 
-> ⚠️ 注意 哪些寄存器是在一个函数中可以被随意改写的，哪些是需要保存到栈上之后才能改写的
+* 实验所需工具：
+  * Linux kernel 5.15
+  * QEMU 模拟器 （qemu-system-aarch64）
+  * gdb-multiarch 多架构调试工具调试 kernel
+  * gdb 调试工具调试用户态程序
+* 实验提供内容：
+  * QEMUrootfs 文件（其内部包含了 gdb，vim 等工具）
+  * QEMU 运行脚本（ qemu.sh ）
+  * vmlinux 内核镜像(用于 gdb-multiarch 调试)
 
+## 4 前置知识
 
-![armv8 reg](img/armv8_reg.png)
+### 4.1 UAF漏洞原理与利用
 
+Use-After-Free，即当一块内存被释放之后被再次使用，但是这种使用会分为几种情况：
 
-#### ARM64 指令
+* 内存块被释放之后，对应的指针被设置成 NULL，然后程序使用空指针导致的**程序崩溃**(一般会报指针解引用错误)。
+* 内存块被释放之后，对应指针没有被设置成 NULL，然后在使用了这个指针之前，没有对这块内存进行修改，**程序很可能能够正常运转**。
+* 内存块被释放之后，对应指针没有被设置成 NULL，且在使用该指针之前有代码对这块内存进行了修改，那么程序再次使用这块内存，**会导致一些奇怪的问题**，比如访问了可能不属于该进程的内存块(由于释放后会被内核分配给别的进程)，甚至通过该指针对这块内存进行修改，然后导致控制流的跳转等。
 
-* mov 指令。将数据从一个寄存器移动到另一个寄存器，或者将一个立即数加载到寄存器。
+我们一般所说的UAF漏洞指的都是后面两种，释放后没有被设置为 NULL 的内存指针被称为悬挂指针 ( dangling pointer)。
 
-```arm
-mov x1, 8   // x1 = 8
-mov x2, x1  // x2 = x1
-```
-
-* 数据处理指令，如 add, sub, and, or 等。
-
-```arm
-add x1, x8, x9              // x1 = x8 + x9
-add x8, x9, #0x30           // x8 = x9 + 0x30
-add x19, x24, x20, lsl #3   // x19 = x24 + x20 << 3
-```
-
-* 访存与寻址指令
-
-```arm
-str x0, [sp, #104]              // *(sp + 104) = x0 
-str x2, [x1, #4]!               // x1 = x1 + 4, *(x1) = x2 (注意写入地址为加上4后的x1)
-stp x0, x1, [sp]                // *(sp) = x0, *(sp + 8) = x1
-
-ldr x19, [x19, #40]             // x19 = *(x19 + 40)
-ldr x20, [x21, x19, lsl #3]     // x20 = *(x21 + x19 << 3)
-ldp x29, x30, [sp], #352        // x29 = [sp], x30 = [sp + 8], sp = sp + 352
-
-adrp x0, ffff800011c44000 <init_task+0xb40>  // x0 = 0xffff800011c44000，注意仅仅获取地址，不实际进行访存操作
-```
-
-* 比较与跳转指令
-
-```arm
-b ffff800010013860 <user_enable_single_step+0x38>       // 无条件跳转
-cbz x19, ffff80001001399c <ret_from_fork+0x10>          // 条件跳转，若 x19 == 0 则跳转到0xffff80001001399c
-
-cmp w0, w3                                                        // 比较 w0 与 w3 寄存器，该指令进行w0 - w3运算，根据运算结果，设置 PSTATE 中的N位（结果为负）或者Z位（结果为0）
-b.eq    ffff800010013b80 <find_supported_vector_length+0x78>      // 条件跳转，如果 PSTATE 中的Z位为1,那么跳转
-```
-
-* 函数调用与返回指令
-
-  * bl 指令将 PC + 4 写入x30，并跳转到目标函数（直接跳转）
-  * blr 指令将 PC + 4 写入x30，并跳转到目标函数，跳转位置由寄存器指定（间接跳转）
-  * ret 指令将 x30(lr) 寄存器写入 PC，跳转到 caller 的下一条指令位置
-
-```arm
-bl ffff800010deeab8 <asm_exit_to_user_mode>
-blr x1
-ret
-```
-
-* mrs/msr 指令
-  ARM64 不允许通过mov指令来读写系统寄存器，只能使用 mrs 和 msr 指令。
-
-```asm
-mrs x20, sp_el0         // sp_el0 的值拷贝到 x20
-msr mdscr_el1, x20      // x20 的值拷贝到 mdscr_el1
-```
-
-### 3.2 ARM64 Stack Layout
-
-每一次函数的调用都会在栈上维护一个栈帧，保存该函数调用的信息。下面的图展示了 ARM64 架构中栈的布局。栈的增长方向为从高地址到低地址。在函数开始处，首先分配局部变量的内存空间，r然后将 callee-saved 寄存器 push 到栈上，最后将 lr 和 fp 寄存器 push 到栈上（注意这里和x86/x64的不同）。在函数返回前，恢复 lr, fp 和 callee-saved 寄存器的值，并回收栈空间。
-
-根据栈帧的布局，当攻击者利用某个局部变量的缓冲区溢出漏洞时，覆盖的是上一个函数栈帧的 x29 和 x30。
-
-```
-
-                               ┌────────────────┐
-                               │                │
-       High Addr │             │                │
-                 │             │                │
-                 │             │      ...       │
-                 │             │                │    caller function
-                 │             │      x30       │
-                 │             │                │
-                 │             │      x29       │
-                 │             ├────────────────┤
-                 │             │    local var   │
-                 │             │                │
-                 │             │  callee-saved  │
-                 │             │                │    callee fucntion
-                 │             │       x30      │
-       Low Addr  │             │                │
-                 │             │       x29      │
-                 ▼    ───────► └────────────────┘
-                        sp/fp
-
-
-```
-
-值得注意的是，ARM64 中和 x86-64 不同，没有提供 push 和 pop 指令，可以通过 str 指令和 ldr 指令实现 push 和 pop。
-
-```asm
-stp x29, x30, [sp, #-32]!
-mov x29, sp
-str x19, [sp, #16]
-
-...
-
-ldr x19, [sp, #16]
-ldp x29, x30, [sp], #32
-ret
-```
-
-这段代码展示了某个函数开始处和返回前的代码。在函数开始处，将 sp 减去32，也就是在栈上分配了32字节的空间，将 x29 保存在[sp], 在 x30 保存在[sp + 8], 将该函数要用到的 callee-saved 寄存器 x19 保存在[sp + 16]。
-
-在函数返回前，分别从栈上恢复 callee-saved 寄存器和 x29, x30 寄存器的值，并将 sp 加上32，也就是回收32字节的空间。
-
-### 3.3 相关安全机制
-
-#### KASLR
-
-KASLR(Kernel address space layout randomization) 是 Linux 内核的一个安全机制，该机制可以让内核每次启动时，随机生成一个偏移量，内核镜像的链接地址加上这个偏移才是内核镜像最终映射的虚拟地址。该机制使内核符号的地址变得随机，增大了攻击者获取内核符号地址的难度，无法轻易发起 ROP 等攻击。
-
-然而，攻击者仍然可以绕过 KASLR。攻击者能够利用内核中的信息泄露漏洞获取某个函数所在的虚拟地址，通过与编译内核时产生的链接地址相减，就可以获取本次运行生成的偏移值，从而获取了内核所有函数的虚拟地址。
-
-#### canary
-
-stack canary 是一种用于防范栈缓冲区溢出攻击的安全机制。当一段内存被拷贝到栈上的局部变量时，如果拷贝长度是由用户控制的且没有检查长度的合法性时，攻击者可以覆盖掉位于缓冲区上方的返回地址，从而实现控制流劫持。为了防范该类攻击，Linux 内核引入了 stack canary 。支持canary的栈布局如下图所示，canary位于局部变量上方。
-
-```
-
-                                   ┌────────────────┐
-                                   │                │
-           High Addr │             │                │
-                     │             │                │
-                     │             │      ...       │
-                     │             │                │    caller function
-                     │             │      x30       │
-                     │             │                │
-                     │             │      x29       │
-                     │             ├────────────────┤
-                     │             │     canary     │
-                     │             │                │
-                     │             │    local var   │
-                     │             │                │    callee fucntion
-                     │             │  callee-saved  │
-           Low Addr  │             │                │
-                     │             │       x30      │
-                     ▼             │                │
-                          ───────► │       x29      │
-                            sp/fp  └────────────────┘
-
-```
-
-stack canary 在函数的开始时push到栈上，在函数返回前，检查是否被篡改。假如攻击者通过缓冲区溢出漏洞覆盖了栈上的返回地址，那么 stack canary 肯定也被覆盖。函数在返回前检查发现 stack canary 的值被篡改，则说明栈的内容已被破坏，内核直接 panic。
-
-然而，stack canary 安全机制也是可以被绕过的。在内核实现中，stack canary 是 per-task 的，也就是说一个进程所有栈帧的 stack canary 的值都是相同的，如果攻击者通过缓冲区溢出读泄露了某个栈帧的 canary ，那么攻击者在发起针对该进程的缓冲区溢出攻击时，就可以将 stack canary 覆盖为合法值，从而绕过 stack canary 的检查。
-
-通常获得canary的手段有
-
-- 通过越界读
-- 通过overflow，读取原字符串能带出canary
-- 不能读取的时候，且符合Blind ROP的条件时，通过overflow高效爆破
-
-![](https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/figure/stack_reading.png)
-
-### 3.4 cred结构体
-
-在 Linux 内核中，结构体 cred 记录了进程的权限，该结构体保存了该进程的 uid, gid 等信息（Linux 用 task_struct 结构来管理每个进程，该结构体中有个成员指向 cred）。如果攻击者能够修改进程的 cred 结构体，将 uid 等字段修改为0,该进程就拥有了 root 权限。
-
-Linux 内核主要通过以下两个API修改进程权限：
-
-其中 prepare_kernel_cred 函数用于构造新的 cred 结构体，当给该函数传递的参数为 NULL 时，该函数会构造一个拥有 root 权限的 cred 结构体；
-
-commit_cred 函数用于给当前进程设置新的 cred 结构体。通过调用 commit_creds(prepare_kernel_cred(0)) ,就能将当前进程的权限修改为 root 权限。
-
-## 4.实验环境与介绍
-
-### 4.1 实验环境
-
-本次实验提供了两种方式进行环境配置，任选一种
-
-1.VirtualBox 虚拟机（⚠️注意arm mac无法正常运行这个虚拟机，windows可以），虚拟机环境为 Ubuntu20.04，用户名和密码均为 syssec。
-
-  - 点击[天翼网盘链接](https://cloud.189.cn/t/EvY32uzimEbm),访问码：8yzw，下载虚拟机（可以用直链助手生成直链进行下载）
-
-2.如果你嫌下载、安装虚拟机麻烦或是arm mac，就下载**不包含虚拟机的源文件** `lab2-source.zip`
-
-  - 点击[天翼网盘链接](https://cloud.189.cn/web/share?code=zy2ENz7fiUrq)，访问码：xa2r
-
-虚拟机内包含了完成本次实验所需要的各种环境。本次实验的文件保存在虚拟机 `~/lab2`目录中。
-
-```bash
-syssec@VM:~/lab2$ tree -L 1
-.
-├── Image
-├── linux-5.15
-├── rootfs.cpio.gz
-├── share
-├── start.sh
-└── vmlinux
-
-2 directories, 4 files
-```
-
-其中，`Image` 和 `vmlinux` 是有漏洞的内核镜像，`rootfs.cpio.gz` 是简易的文件系统，`linux-5.15` 目录是整个内核的源代码，`start.sh` 是启动内核的脚本，`share`目录是 qemu 和宿主机的共享目录。为了快速启动内核，方便同学们调试，使用了简易的文件系统，缺乏常用的命令。同学们可以在宿主机内编写、编译 PoC 程序，并拷贝到 `share` 目录中，允许在 qemu 中访问。
-
-### 4.2 实验介绍
-
-本实验提供了一个有 buffer overflow 漏洞的 driver，可以通过 /dev/zjubof 访问。该驱动提供了 read, write 两种接口，通过这两个接口，用户可以触发 buffer overflow 漏洞并通过 ROP 攻击获取 Linux 内核的 root 权限。该 driver 的使用案例如下：
-
-```C
-int fd = open("/dev/zjubof", O_RDWR);  //打开该设备，返回文件描述符fd
-
-if (fd < 0)
-{
-    perror("open fail\n");
-    return -1;
-}
-
-int len = 0;
-char buf[50] = "hello";
-len = write(fd, buf, 5);    // 将 buf 的内容写入该 driver，长度为5字节
-len = read(fd, buf, 48);    // 从 driver 中读取48字节的内容，结果保存到 cmd。
-
-close(fd);                  //关闭该设备
-```
-
-我们编写的驱动位于 `drivers/misc/bofdriver.c` 中，`zjubof_read` 函数在用户调用 `read` 函数时被调用，`zjubof_write` 函数在用户调用 `write` 函数时被调用。
-
-`zjubof_write` 函数最终调用了 `zjubof_write4` 函数，该函数的参数 `len` 控制了拷贝的长度，存在 buffer overflow write 漏洞。
-
-`zju_read` 函数读取的内容是全局变量 `prev.cmd` ，该值由 `zjubof_write4` 填充，`zjubof_write4` 函数存在 buffer overflow read 漏洞。请同学们思考如何控制 cmd.length 的值，从而泄露 canary 和 lr。
-
-### 4.3 GDB 调试内核
-
-#### 4.3.1 步骤
-
-修改 `start.sh` 脚本，加上 `-s` 选项。由于内核开启了 KASLR 机制，GDB无法打断点，因此在用 GDB 调试时，需要关闭 KASLR，具体命令如下：
-
-```bash
-qemu-system-aarch64 -M virt \
-	-cpu max \
-	-smp 2 \
-	-m 512 \
-	-kernel ./Image \
-	-nographic \
-	-append "console=ttyAMA0 root=/dev/ram rdinit=/sbin/init nokaslr" \ # 关闭 KASLR
-	-initrd ./rootfs.cpio.gz\
-        -fsdev local,security_model=passthrough,id=fsdev0,path=./share\
-	-device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare \
-	-s \ # 允许gdb通过端口1234进行调试
-```
-
-`gdb-multiarch` 命令没有在虚拟机环境中安装，通过 `sudo apt install gdb-multiarch` 命令安装。
-
-使用命令如下：
-
-```bash
-#第一个 shell
-./start.sh
-
-sudo apt install gdb-multiarch
-
-#第二个shell
-gdb-multiarch vmlinux
-(gdb) target remote :1234
-
-# 接下来就可以打断点调试了
-```
-
-[gef](https://github.com/hugsy/gef) 是 GDB 的一个插件，同学们可以去下载使用。
-
-如果想要在 GDB 调试过程中观察汇编代码对应的C源码，可以将 `vmlinux` 移到 Linux内核源码目录 `linux-5.15` 中。
-
-#### 4.3.2 GDB 常用命令
-
-* (gdb) layout asm: 显示汇编代码
-* (gdb) start: 单步执行，运行程序，停在第一执行语句
-* (gdb) continue: 从断点后继续执行，简写 c
-* (gdb) next: 单步调试（逐过程，函数直接执行），简写 n
-* (gdb) step instruction: 执行单条指令，简写 si
-* (gdb) run: 重新开始运行文件（run-text：加载文本文件，run-bin：加载二进制文件），简写 r
-* (gdb) backtrace：查看函数的调用的栈帧和层级关系，简写 bt
-* (gdb) break 设置断点，简写 b
-  * 断在 foo 函数：b foo
-  * 断在某地址: b * 0x80200000
-* (gdb) finish: 结束当前函数，返回到函数调用点
-* (gdb) frame: 切换函数的栈帧，简写 f
-* (gdb) print: 打印值及地址，简写 p
-* (gdb) info：查看函数内部局部变量的数值，简写 i
-  * 查看寄存器 ra 的值：i r ra
-* (gdb) display：追踪查看具体变量值
-* (gdb) x/4x : 以 16 进制打印 处开始的 16 Bytes 内容
-
-更多命令可以参考[100个gdb技巧](https://wizardforcel.gitbooks.io/100-gdb-tips/content/)
-
-**请注意最后一定要在开启 KASLR 的情况下获取内核权限。**
-
-## 5.实验任务
-
-本次实验分为 4 个 Task，前三个 Task 要求编写 Poc 代码实现对应目标， Task4 要求了解 Linux 内核对 ROP 攻击的防护。
-
-Poc 代码编译方法：
-
-```bash
-aarch64-linux-gnu-gcc -static exp.c -o exp
-```
-
-### 5.1 Task1: 绕过 stack canary 和 KASLR
-
-Task1 要求利用 buffer overflow read 泄露 stack canary 的值；并获取当前栈帧上保存的 lr 值，通过 `aarch64-linux-gnu-objdump` 命令获取该返回地址对应的链接地址，两者相减，就可以获取内核镜像的偏移，从而绕过 KASLR。
-
-`aarch64-linux-gnu-objdump` 使用方法：
-
-```bash
-aarch64-linux-gnu-objdump -d vmlinux > dump.txt       #反汇编所有函数，结果保存在dump.txt中
-aarch64-linux-gnu-objdump --disassemble=zjubof_write vmlinux  #反汇编zjubof_write函数
-```
-
-**请注意内核每次启动的 KASLR 偏移值都不同，Task 2，3的利用代码要包含Task 1 的利用代码。**
-
-> 提示：1. 在编写PoC的过程中可能会遇到加入`system("/bin/sh")`导致其余printf无法输出的问题，所以可以先注释掉`system("/bin/sh")`；2. 虚拟机中出现的`can't access tty...`，不会干扰利用。
-
-### 5.2 Task2: 修改return address，获取 root 权限
-
-在泄露了 stack canary 和 offset 后，我们就可以利用 buffer overflow write 漏洞覆盖掉栈上的 lr 值。在Task2 中，只需要覆盖 lr 使执行流跳转到 `first_level_gadget` （请注意跳转到该函数的哪一行），该 gadget 调用 `commit_creds(prepare_kernel_cred(0))` 提权，并将栈指针调整到 `zjubof_write` 函数栈帧的底部，与正常执行时的sp保持一致，以保证能正确从 `zjubof_write` 函数返回。请同学们通过画栈的变化图以及通过 gdb 追踪栈的变化，搞清楚为什么要调整栈指针。
-
-在获取 root 权限后，读取 `/root/flag.txt` 文件获取 flag。
-
-PoC 代码示例：
+为了更好的理解 UAF，可以先看一段简单的 demo：
 
 ```C
 #include <stdio.h>
 #include <stdlib.h>
+typedef struct name 
+{
+	char *myname;
+    int a, b, c;
+	void (*func)(char *str);
+    int a1, b1, c1;
+} NAME;
+void myprint(char *str) { printf("%s\n", str); }
+void printmyname(char *str) { printf("call print my name, %s\n", str); }
+int main() 
+{
+	NAME *a;
+    a = (NAME *)malloc(sizeof(struct name));
+    a->func = myprint;
+    a->myname = "I can also use it";
+    a->func("this is my function");
+    // free without modify
+    free(a);
+    a->func("I can also use it"); 
+    // free with modify
+    a->func = printmyname;
+    a->func("this is my function");
+    // set NULL
+    a = NULL;
+    // printf("this pogram will crash...\n");
+    a->func("can not be printed...");
+}
+```
+
+可以看到该段代码将一个 free 过后的指针继续使用，这也是前述所讲的 UAF 的基本原理。
+
+再来看一段简单的 hello world 程序：
+
+```C
+#include <stdio.h>
 #include <string.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <fcntl.h>
+#include <stdlib.h>
+int main()
+{
+    char *p0;
+    p0 = (char *)malloc(sizeof(char)*10);   //指针p0申请内存；
+    memcpy(p0,"hello",10);
+    printf("p0 Addr: %p, %s\n", p0, p0);      //打印其地址与值；
+    free(p0);                               //释放p0；
 
-int main(int argc, char *argv[])
-{   
-    int fd = open("/dev/zjubof", O_RDWR);
-  
-    /*
-      Your Code
-    */
-
-    system("/bin/sh");  //创建新shell
+    char *p1;
+    p1=(char *)malloc(sizeof(char)*10);
+    memcpy(p1,"world",10);
+    printf("p1 Addr: %p, %s\n", p1, p0);
     return 0;
 }
 ```
 
-PoC 运行示例：
+该段程序先通过 malloc 分配了16字节大小的堆上内存块，随后讲该内存块 free，之后又利用 malloc 分配了一块同样大小的内存块。然后我们看一下程序运行结果：
 
-```
-/mnt/share $ ./exp                    // 运行利用代码
-/mnt/share #                          // 成功获取root权限，注意'$'变为 '#'
-/mnt/share # cat /root/flag.txt       // 读取flag
-```
-
->  思考题：为什么在exp中直接覆盖返回地址为 ``first_level_gadget`` 的第一行，会造成kernel在运行到这一行的时候产生panic？
-
-### 5.3 Task3: ROP 获取 root 权限
-
-在Task3中，不允许跳转到 `first_level_gadget` ，需要通过多个ROP片段实现提权。
-
-步骤:
-
-* 跳转到 `prepare_kernel_cred` 函数中合适的位置 （请注意不能跳转到函数的第一行汇编，为什么？）
-* 跳转到 `commit_creds` 函数中合适的位置（注意同上）
-* 跳转到 `second_level_gadget` 函数中合适的位置，将栈指针调整到合适的位置，以保证能正确从 `zjubof_write` 函数返回
-* 跳转回 `zjubof_write`函数中合适的位置
-
-**请注意在构造 ROP 的过程中，注意 sp 的变化，将跳转地址写到正确的位置**
-
-### 5.4 Task4: Linux内核对 ROP 攻击的防护
-
-ROP 攻击的发起需要修改栈上的返回地址。在 ARM64 架构的 Linux 内核中，ARM PA 机制可用于保护栈上返回地址的完整性。通过 `ARCH=arm64 make CROSS_COMPILE=aarch64-linux-gnu-  menuconfig` 命令修改内核的配置，使能 Kernel Features -> ARMV8.3 architecture features -> Enable support for pointer authentication 就开启了 Linux 内核对 PA 的支持。
-
-请同学们开启 PA 支持后，重新编译内核，观察 `zjubof_write3` 函数的汇编有什么变化，分析PA 机制是如何保证攻击者无法发起 ROP 攻击的。
-
-内核编译方法：
-
-```bash
-export ARCH=arm64
-make CROSS_COMPILE=aarch64-linux-gnu- defconfig
-make CROSS_COMPILE=aarch64-linux-gnu- menuconfig  # 启用 PA 支持（默认已开启）
-make CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc)
+```shell
+user@user-Super-Server:~/Desktop/play$ gcc test.c 
+user@user-Super-Server:~/Desktop/play$ ./a.out 
+p0 Addr:0x5605b5dde2a0,hello
+p1 Addr:0x5605b5dde2a0,world
 ```
 
-## 6. 实验提交
+可以发现在堆上分配同样大小的内存时候，第二次分配的地址与第一次分配的地址是一样的，都是 ` 0x5605b5dde2a0`。
 
-请同学们在学在浙大上提交实验报告。格式要求为pdf，命名为学号+姓名+lab2.pdf。实验报告需要包含以下内容：
+> Question 1：为什么会这样？为什么两次分配的内存块地址会一样？
+>
+> 提示：堆上内存分配算法，注意glibc 2.26前后的不同，注意用户态与内核态的不同
 
-* 单跳ROP和多跳ROP的PoC代码
-* flag文件的内容
-* 回答思考题
-  * 为什么linux canary的最低位byte总是 `\00`？
-  * 在ARM64的ROP中，在 `zjubof_write4`中overflow覆盖到的返回地址，会在 什么时候/执行到哪个函数哪一行的时候 被load到pc寄存器？
-  * 在Task2中，为什么在exp中直接覆盖返回地址为 `first_level_gadget` 的汇编第一行地址，会造成kernel在运行到这一行的时候产生panic？并写出造成这个panic的触发链。
-  * Linux 内核是如何利用 ARM PA 来防御 ROP 攻击的
+由此我们便可以知道 UAF 的利用过程：
+
+* 内存中存在一个空悬指针指向一块攻击者可控的内存。随后将该内存释放，但是不将指针置空，故攻击者仍然可以利用指针控制这块内存的内容。
+* 别的进程或内核通过 malloc/kmalloc 申请了一块同样大小的内存块，会将攻击者可控的这块内存分配出去。
+* 由于这块内存内容攻击者可控，就可以利用该块内存实施攻击手段，包括劫持控制流，泄露数据等，最终达到获取 root 权限的目的。
+
+### 4.2 Linux slab 内存管理
+
+#### 4.2.1 什么是 slab ？
+
+slab 是 Linux 内核的内存管理组件，它用于给 Linux 内核中的对象分配内存，所谓对象就是 Linux 内部的数据结构（task_struct，tty_struct 等）。
+
+#### 4.2.2 slab分配机制
+
+当在内核中调用 kmalloc 时（其功能类似用户空间的malloc，分配一段给定大小的内存），会通过 slab 分配特定的大小的内存块。而 slab 对于内存块具有缓存机制，假设内核中有如下的控制流：
+
+```c
+void* a = kmalloc(BUF_SIZE, GFP_KERNEL);
+// do something
+kfree(a);
+
+void* b = kmalloc(BUF_SIZE, GFP_KERNEL); 
+```
+
+即内核先通过第一行代码分配了一块 BUF_SIZE 大小的内存块，并将内存块地址赋给指针 a，随后释放了指针 a 所指向的内存块，slab分配器会将其放入一个 `kmem_cache` 缓存中，该缓存内的内存块大小都为 BUF_SIZE 大小。随后内核再次分配一块同样大小的内存块，其会将刚释放的这块内存块分配出去。
+
+### 4.3  Linux 设备及设备驱动
+
+在 Linux 中 `/dev` 目录下，存在很多设备文件，其中有一个 `/dev/ptmx `设备，这个设备文件主要用于打开一对伪终端设备，本次实验利用该设备进行控制流的劫持。
+
+可能需要的头文件：
+
+```c
+#include<stdio.h> 
+#include <stdlib.h> 
+#include <string.h> 
+#include <unistd.h> 
+#include <sys/stat.h> 
+#include <sys/types.h>
+#include <fcntl.h> 
+#include <sys/ioctl.h> 
+```
+
+#### 4.3.1 /dev/ptmx 伪终端和 tty_struct 结构的利用
+
+进程打开 `/dev/ptmx` 设备可以通过使用代码 `open("/dev/ptmx", O_RDWR | O_NOCTTY) ` 打开，当我们执行该代码时，内核会通过以下函数调用链，分配一个 `tty_struct` 结构体：
+
+```c
+ptmx_open (drivers/tty/pty.c)
+-> tty_init_dev (drivers/tty/tty_io.c)
+  -> alloc_tty_struct (drivers/tty/tty_io.c)
+```
+
+`tty_struct` 的结构可以[参考链接](https://elixir.bootlin.com/linux/v5.15/source/include/linux/tty.h#L143)所示,在5.15版本的内核中，其大小为 `0x2B8`(696字节) 大小。
+
+其中第5个字段为 `const struct tty_operations *ops`,结构体 `tty_operations`可[参考链接](https://elixir.bootlin.com/linux/v5.15/source/include/linux/tty_driver.h#L247)，该结构体实际上是多个函数指针的集合。在打开了设备终端之后，可以通过系统调用，调用该结构体中的函数，下面代码给了一个使用设备的 demo :
+
+```c
+... //some head file && main struct
+fd = open("/dev/ptmx", O_RDWR | O_NOCTTY); //open a dev
+err = read(fd, &buf, count);
+if(err < 0)
+{
+  // read err
+}
+err = write(fd, &buf, count);
+if(err < 0)
+{
+  // write err
+}
+err = ioctl(fd, cmd, &arg);
+if(err < 0)
+{
+  // ioctl err
+}
+close(fd);
+```
+
+#### 4.3.2 利用 ioctl 控制寄存器
+
+    `tty_operations` 结构体中有一个 ioctl 函数，其第一个参数为所对应终端设备的 tty_struct 结构体指针，第二个参数和第三个参数分别是 命令号(cmd) 和 参数所在地址(arg) 如下所示：
+
+```c
+	int  (*ioctl)(struct tty_struct *tty,
+		    unsigned int cmd, unsigned long arg);
+```
+
+    同时用户态程序中 ioctl 系统调用函数原型和调用方式如下所示：
+
+```c
+//函数原型：
+int ioctl (int __fd, unsigned long int __request, ...)
+//调用方式：
+#include <sys/ioctl.h>
+err = ioctl(fd, cmd, &arg);
+```
+
+    可以发现用户态调用 ioctl 时会将 cmd 和 arg 两个参数原封不动地传递给内核中的 ioctl，而 ARM64 架构下函数调用的参数存放在 x0, x1, x2...... 寄存器中，于是我们可以通过修改用户态 ioctl 的参数，从而控制 x1, x2 两个寄存器，并利用这两个寄存器和内核中一些 gadget，可以进而控制更多的寄存器，从而便可以构造函数的参数进行调用。例如：假如内核中存在`mov x1, x0` 的代码片段，由于 x1 寄存器是我们所控制的，而执行该代码片段之后，x0 寄存器内容我们也可以控制。
+
+为了控制ioctl函数，如果我们能够控制其所在结构体 `tty_operation`,或者构造一个假的 `tty_operation` 结构体，并控制 `tty_struct`结构体，将其中 `tty_operation` 成员对应的指针篡改成我们构造的假的结构体地址，这样当我们在用户态执行 `ioctl` 函数时，便可以跳转执行到我们想要执行的地址。
+
+### 4.4 JOP 基础
+
+JOP([参考论文](https://www.comp.nus.edu.sg/~liangzk/papers/asiaccs11.pdf) ) 攻击是类似ROP攻击的一种，只不过ROP通过在栈上构造返回地址来形成攻击链，而JOP攻击不需要利用栈，可以使用跳转的方式来进行攻击，x86 下是通过 `jmp` 指令([参考链接](https://www.anquanke.com/post/id/151571))，ARM 上通过 `BR/BLR` 指令([参考链接](https://developer.arm.com/documentation/102433/0100/Jump-oriented-programming))。当JOP跳转的指令以 ret 指令结尾，其也能转化成 ROP 攻击。
+
+### 4.5 利用 cred 结构体获取 root 权限
+
+从 user 获取 root 权限的方式有很多，本实验涉及利用 cred 结构体获取 root 权限的方式，更多方式可以参考 [github项目](https://github.com/xairy/linux-kernel-exploitation) 或者浏览器搜索引擎搜索关键字 `linux kernel exploitation` 进行了解。
+
+#### 4.5.1 struct cred的作用
+
+linux kernel 记录了每一个进程的权限，是用 [cred](https://elixir.bootlin.com/linux/v5.15/source/include/linux/cred.h#L110) 结构体记录的，每个进程中都有一个 cred 结构，（ Linux 用 task_struct 结构来管理每个进程，该结构体中有个 cred 类型的指针成员）这个结构保存了该进程的权限等信息（uid，gid 等），如果能修改某个进程的 cred，那么也就修改了这个进程的权限。
+
+所以如果能够获取到当前进程的 task_struct 结构的地址，并通过偏移获取到相应的 cred_struct 的地址，就可以通过直接修改内存的方式，将 cred 中的 uid 和 gid 等字段都设置成0，从而当前进程即变成了 root 权限。此种方式较为困难但是可行，学生可以自行尝试。
+
+同时在kernel有两个函数可以很方便地修改进程的权限：
+
+* [struct cred\* prepare_kernel_cred\(struct task_struct\* daemon\)](https://elixir.bootlin.com/linux/v5.15/source/kernel/cred.c#L718)
+* [int commit_creds\(struct cred \*new\)](https://elixir.bootlin.com/linux/v5.15/source/kernel/cred.c#L447)
+
+当给 `prepare_kernel_cred()` 函数传递一个NULL参数时，该函数会构造一个 kernel 权限的 cred 结构体，即 uid=0，gid=0，并返回该结构体地址。随后可以把该结构体地址作为参数传给 `commit_creds` 函数,即 `commit_creds(prepare_kernel_cred(0))`，这样就可以把当前进程的权限改为 root 权限。
+
+## 5 实验介绍
+
+本次实验虚拟机内提供的文件：
+
+```
+user@user-Super-Server:~/Desktop/experiment$ tree
+.
+├── qemu.sh
+├── rootfs.img
+└── vmlinux
+
+0 directories, 3 files
+```
+
+其中 qemu.sh 是运行 qemu 的脚本，rootfs.img 为文件系统镜像，vmlinux 为未压缩的内核。可以利用 gdb-multiarch 和 qemu 对vmlinux 进行调试。
+
+同时提供了有 BUG 的设备驱动代码，同学们可以自行查看。
+
+### 5.1 实验环境搭建
+
+通过浙大云盘[链接](https://pan.zju.edu.cn/share/020138858d0479ba0a1906893b)下载本次实验压缩包，并解压到lab2的 virtual box 实验镜像中。
+
+解压之后路径如下
+
+```shell
+syssec@VM:~/lab3$ tree
+.
+├── kernel
+│   ├── cfi
+│   │   ├── Image
+│   │   ├── System.map
+│   │   ├── uafdriver.c
+│   │   └── vmlinux
+│   └── nocfi
+│       ├── drivers
+│       │   └── misc
+│       │       └── uafdriver.c
+│       ├── Image
+│       ├── System.map
+│       └── vmlinux
+├── qemu.sh
+└── rootfs.img
+
+5 directories, 10 files
+
+```
+
+主要实验在 `nocfi` 文件夹中进行。其中 `uafdriver.c` 为包含 UAF bug 的驱动文件，可以通过查看其源码理解 UAF 漏洞原理。
+
+>  注意⚠️：**本次实验环境既没有KASLR也没有SMAP防护**
+
+我们提供了编译好的内核镜像(Image)和gdb调试用的vmlinux（symbol可能会有问题）。也可以尝试自己将 `uafdriver.c` 驱动放到lab2所在的内核源码中(`drivers/misc/` 路径下)，再修改同文件夹下的 `Makefile`，增加一行
+
+```c
+obj-y          +=      uafdriver.o
+```
+
+然后重新交叉编译内核源码即可。
+（这样能够方便gdb调试，看到执行流和对应的c代码，直接运行 qemu 脚本也是可以的）
+
+直接运行 qemu 脚本，并输入用户名与密码进入实验环境，可以在 qemu 虚拟机内部直接通过vim编写PoC，并通过gcc进行编译，gdb进行调试。
+
+```shell
+sh qemu.sh
+
+username：ubuntu
+password：123
+```
+
+### 5.2 zjudev接口
+
+本实验在 `/dev/`目录下提供一个 `zjudev` 的设备，该设备在内核维护一个结构体作为字符设备缓冲区，设备缓冲区如下所示，其中 `dev_buf` 字段为打开的设备分配缓冲区，`buf_len` 字段为缓冲区大小（为了防止缓冲区溢出，实际只能使用 `buf_len - 1`）：
+
+```c
+struct zjudev_struct
+{
+    char *dev_buf;
+    size_t buf_len;
+} zjudev;
+```
+
+同时该设备向用户暴露了几个关键接口：
+
+* **open**：
+
+  * 功能：打开 `zjudev` 设备，在内核中为该设备分配64字节的缓冲区大小。
+  * 用户态使用范例：
+
+    ```c
+    int fd;
+    fd = open("/dev/zjudev", O_RDWR); //打开设备，权限为read/write，并返回fd作为文件句柄。（linux万物皆文件）
+    ```
+* **read**：
+
+  * 功能：读取内核缓冲区中规定长度的内容，但是长度小于 `buf_len`。
+  * 用户态使用范例：
+
+    ```c
+    char *buf = (char*) malloc(1024);
+    read(fd, buf, 40);//从设备中读取40字节到buf字符数组中
+    ```
+* **write**：
+
+  * 功能：写入一定长度的内容到内核缓冲区中，但长度不能超过内核缓冲区大小。
+  * 用户态使用范例：
+
+    ```c
+    char *buf = "hello, world!";
+    write(fd, buf, sizeof(buf)); //将buf数组的内容写入设备缓冲区
+    ```
+* **ioctl**:
+
+  * 功能：利用命令控制设备，本实验提供命令号为 `0x0001` 的命令，该功能为释放内核缓冲区，并重新分配一个要求大小的缓冲区，但是该缓冲区大小不能超过8K字节。
+  * 用户态使用范例：
+
+    ```c
+    ioctl(fd, 0x0001, BUF_SIZE); //其中0x0001为命令号，BUF_SIZE为要求的内核缓冲区大小。
+    ```
+* **close**:
+
+  * 功能:关闭该设备，释放内核缓冲区。
+  * 用户态使用范例：
+
+    ```c
+    close(fd); //通过close系统调用关闭文件句柄。
+    ```
+
+> 我们代码中写了有printk打印，但其可能并不会被直接打印显示，解决办法有两种
+>
+> - 使用dmesg命令查看
+> - 如果你~~财力~~时间~~雄厚~~充足，可以给printk加入诸如KERN_EMERG/ALERT的参数然后重新编译kernel才能在命令行直接显示printk的消息：  `printk(KERN_EMERG “halo~~\n”);`
+
+### 5.3 UAF漏洞介绍
+
+由于内核中该设备只有全局一个缓冲区，如果将设备打开两次，第二次打开的设备会覆盖第一次打开设备的缓冲区，且两次打开设备时候，我们可以获得指向同一个设备缓冲区的两个指针。此时如果释放其中一个设备，由于在释放的时候指针没有置空，此时便可以通过另一个文件描述符操作该缓冲区对应的内存，即存在 UAF 漏洞。
+
+同时实验提供的 ioctl 接口能够调整这个缓冲区大小如果将其调整成内核中某个数据结构的大小，当内核分配相同大小的数据结构时，便会使用这块由我们控制的缓冲区，由此我们便可以控制内核的关键数据结构，最终达到 root 权限的目的。
+
+### 5.4 struct结构介绍
+
+`tty_struct`：
+
+```c
+/* offset    |  size */  type = struct tty_struct {
+/*    0      |     4 */    int magic;
+/*    4      |     4 */    struct kref {
+/*    4      |     4 */        refcount_t refcount;
+
+                               /* total size (bytes):    4 */
+                           } kref;
+/*    8      |     8 */    struct device *dev;
+/*   16      |     8 */    struct tty_driver *driver;
+/*   24      |     8 */    const struct tty_operations *ops;
+/*   32      |     4 */    int index;
+/* XXX  4-byte hole  */
+/*   40      |    48 */    struct ld_semaphore {
+/*   40      |     8 */        atomic_long_t count;
+/*   48      |     4 */        raw_spinlock_t wait_lock;
+/*   52      |     4 */        unsigned int wait_readers;
+/*   56      |    16 */        struct list_head {
+/*   56      |     8 */            struct list_head *next;
+/*   64      |     8 */            struct list_head *prev;
+
+                                   /* total size (bytes):   16 */
+                               } read_wait;
+/*   72      |    16 */        struct list_head {
+/*   72      |     8 */            struct list_head *next;
+/*   80      |     8 */            struct list_head *prev;
+
+                                   /* total size (bytes):   16 */
+                               } write_wait;
+...
+
+```
+
+## 6 实验任务
+
+本次实验分为三个小任务，每个小任务难度逐层递进，实验最终要求是获取 root 权限下可读文件中的 flag，并写入自己的实验报告中提交。**本次实验可能会涉及 ASLR，为了简化实验，本次实验提供了 gdb 和 System.map 文件，可以间接绕过。**
+
+### 6.1 Task1：设备接口的使用。
+
+* 编写程序，尝试使用设备接口。
+* 尝试利用**章节5.2**的介绍触发 UAF 漏洞，并利用**章节4.4**所提的 `/dev/ptmx `设备(打开该设备内核会分配一个 `tty_struct`结构体, 但是因为 Linux 多核的关系，可能需要堆喷技术，多次打开结构体，多次分配，直到分配到我们UAF指针所控制的那块内存空间为止)，尝试控制一个 `tty_struct` 结构体，并且能够读取和修改所控制的 `tty_struct` 结构体的内容。（触发过程可能会造成 kernel crash，重启 qemu 即可）。
+
+> 提示🌟：同一个设备符被close之后就不要再使用read等函数了。这里需要想办法保证在能够close的情况下，继续读取，该怎么做呢？
+
+> Question 2：如何确定自己所控制的指针一定被分配给 tty_struct结构体 ?
+>
+> 提示：tty_struct 结构体里有些字段比较特殊。
+
+### 6.2 Task2：简单获取root shell
+
+为了方便同学们获得 root 权限的 shell，本实验在内核中提供一个预先设置的函数 `hack_cred`，其定义如下所示，可以直接利用**章节4.4**所提的 `/dev/ptmx `设备,想办法劫持控制流，使其运行该函数获取 root 权限。
+
+```c
+int hack_cred(struct tty_struct *tty, const unsigned char *buf, int c)
+{
+    struct cred *root_cred = prepare_kernel_cred(NULL);
+    commit_creds(root_cred);
+    return -1;
+}
+```
+
+具体步骤如下：
+
+* 利用 gdb-multiarch 调试 kernel，获取该函数地址。
+* 根据前述知识和 `/dev/ptmx` 设备，将 `/dev/zjudev` 设备的缓冲区修改为 `tty_struct`结构体大小，并想办法控制该结构体，读取该结构内字段。
+* 利用 `write` 系统调用控制该结构体内 `tty_operation` 成员，并将其中某个函数指针地址修改为 `hack_cred` 的地址
+* 利用系统调用触发该函数，形成一次跳转的JOP攻击
+
+> 提示🌟：这里没有开启smap保护，所以内核可以访问用户态的内存
+>
+> Question 3: 为什么不能直接通过 UAF 控制 cred 结构体直接修改其内容？有没有办法能够通过 UAF 来利用新版本的 cred 结构体呢？
+>
+> 提示：prepare_kernel_cred 函数源码，以及 linux 内核堆内存分配器机制。
+
+### 6.3 Task3：gadget 获取 root shell
+
+第三个小任务在第二个任务的基础上增加了一点难度，要求不使用我们提供的 `hack_cred` 函数，而是使用零碎的以 `br/blr` 指令结尾的汇编代码片段（称为gadget）实现获取root权限。
+
+为了降低实验难度，我们提供了三个gadget (可以利用工具自行在内核镜像中寻找可利用的代码片段) ，如下所示。利用这三个 gadget 以及前述知识，修改我们所控制的 `tty_struct` 和 `tty_operation` 结构体的内容，并多次使用 `tty_operation` 接口获取一些信息，并最终获得root权限。
+
+```c
+void zju_gadget1(void)
+{
+    __asm__ __volatile__ ( 
+    "ldr x1, [x0, #0x38]     \n\t"
+    "mov x0,x2     \n\t"
+    "br x1 \n\t"
+    );
+}
+
+
+void zju_gadget2(void)
+{
+    __asm__ __volatile__ ( 
+    "mov x0,0     \n\t"
+    "ldr x1, [x2, #0x28]     \n\t"
+    "br x1 \n\t"
+    );
+}
+
+
+void zju_gadget3(void)
+{
+    __asm__ __volatile__ ( 
+    "ret     \n\t"
+    );
+}
+```
+
+具体步骤如下：
+
+* 利用 gdb-multiarch 获取三个gadget代码片段地址，以及 `prepare_kernel_cred` 和 `commit_creds` 函数地址。
+* 利用 `zju_gadget3`，获取 `tty_struct` 结构体的地址。（注意：返回的结构体地址为 x0 寄存器的内容，但是会和真实值不一样，找到原因并获取真实的结构体地址）
+* 利用剩下两个gadget控制寄存器 x0，x1，x2，并想办法设置tty operations构造 0 参数，跳转执行 `prepare_kernel_cred` 函数，获取其返回地址。
+* 利用剩下两个gadget控制寄存器 x0，x1，x2，并想办法将x0寄存器的值控制成上一步所获得的cred的地址，并调用 `commit_creds` 函数。
+* 获取 root shell 之后读取flag文件。
+
+> 提示🌟：不要忘了ioctl的参数类型(fd, int, arg)
+>
+> Question 4:为什么第二步可以直接ret获取到 `tty_struct`结构体的地址？ret 执行前后的控制流是什么样的？
+
+### 6.4 Task4: 内核 CFI 保护
+
+为了抵御上述劫持内核控制流的JOP攻击，安全研究人员提出了控制流完整性的保护方案（[Control-Flow Integrity](https://lwn.net/Articles/810077/)）。目前内核支持匹配函数类型的CFI保护，需要利用 Clang/LLVM 编译器编译内核源码，最后得到支持CFI的内核镜像。对于每个间接调用，编译器通过匹配其函数指针和函数的类型，提前计算出潜在的目标函数集合，生成跳转表，限制间接调用的目标函数必须在集合中。
+
+实验内容如下：
+
+* 使用objdump反汇编开启CFI的内核镜像 `vmlinux`，获得汇编代码，**提交任意一个间接调用的汇编代码**，并详细解释CFI是如何防御JOP攻击。
+* 重新运行JOP攻击程序，查看是否CFI是否能起作用。**提交dmesg中包含CFI Failure截图**。
+
+## 7. 实验提交
+
+请同学们在学在浙大上提交实验报告。格式要求为 pdf，命名为学号+姓名+ lab3.pdf。实验报告需要包含以下内容：
+
+* flag 文件的内容
+* Task2 和 Task3 的 PoC 代码
+* Task4 中要求提交的内容
+* 回答Question1~4
