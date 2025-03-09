@@ -11,7 +11,6 @@
 ```bash
 ├── README.md
 ├── docs/       # 实验文档
-├── lab1/       # lab1 实验资料
 └── mkdocs.yml
 ```
 
