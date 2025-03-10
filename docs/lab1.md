@@ -211,14 +211,14 @@ commit_cred 函数用于给当前进程设置新的 cred 结构体。通过调�
 
   - 点击[天翼网盘链接](https://cloud.189.cn/t/EvY32uzimEbm),访问码：8yzw，下载虚拟机（可以用直链助手生成直链进行下载）
 
-2.如果你嫌下载、安装虚拟机麻烦或是arm mac，就下载**不包含虚拟机的源文件** `lab2-source.zip`
+2.如果你嫌下载、安装虚拟机麻烦或是arm mac，就下载**不包含虚拟机的源文件** `lab1-source.zip`
 
   - 点击[天翼网盘链接](https://cloud.189.cn/web/share?code=zy2ENz7fiUrq)，访问码：xa2r
 
-虚拟机内包含了完成本次实验所需要的各种环境。本次实验的文件保存在虚拟机 `~/lab2`目录中。
+虚拟机内包含了完成本次实验所需要的各种环境。本次实验的文件保存在虚拟机 `~/lab1`目录中。
 
 ```bash
-syssec@VM:~/lab2$ tree -L 1
+syssec@VM:~/lab1$ tree -L 1
 .
 ├── Image
 ├── linux-5.15
@@ -419,7 +419,7 @@ make CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc)
 
 ## 6. 实验提交
 
-请同学们在学在浙大上提交实验报告。格式要求为pdf，命名为学号+姓名+lab2.pdf。实验报告需要包含以下内容：
+请同学们在学在浙大上提交实验报告。格式要求为pdf，命名为学号+姓名+lab1.pdf。实验报告需要包含以下内容：
 
 * 单跳ROP和多跳ROP的PoC代码
 * flag文件的内容

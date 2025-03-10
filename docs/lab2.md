@@ -255,12 +255,12 @@ user@user-Super-Server:~/Desktop/experiment$ tree
 
 ### 5.1 实验环境搭建
 
-通过浙大云盘[链接](https://pan.zju.edu.cn/share/020138858d0479ba0a1906893b)下载本次实验压缩包，并解压到lab2的 virtual box 实验镜像中。
+通过浙大云盘[链接](https://pan.zju.edu.cn/share/020138858d0479ba0a1906893b)下载本次实验压缩包，并解压到lab1的 virtual box 实验镜像中。
 
 解压之后路径如下
 
 ```shell
-syssec@VM:~/lab3$ tree
+syssec@VM:~/lab2$ tree
 .
 ├── kernel
 │   ├── cfi
@@ -286,7 +286,7 @@ syssec@VM:~/lab3$ tree
 
 >  注意⚠️：**本次实验环境既没有KASLR也没有SMAP防护**
 
-我们提供了编译好的内核镜像(Image)和gdb调试用的vmlinux（symbol可能会有问题）。也可以尝试自己将 `uafdriver.c` 驱动放到lab2所在的内核源码中(`drivers/misc/` 路径下)，再修改同文件夹下的 `Makefile`，增加一行
+我们提供了编译好的内核镜像(Image)和gdb调试用的vmlinux（symbol可能会有问题）。也可以尝试自己将 `uafdriver.c` 驱动放到lab1所在的内核源码中(`drivers/misc/` 路径下)，再修改同文件夹下的 `Makefile`，增加一行
 
 ```c
 obj-y          +=      uafdriver.o
@@ -509,7 +509,7 @@ void zju_gadget3(void)
 
 ## 7. 实验提交
 
-请同学们在学在浙大上提交实验报告。格式要求为 pdf，命名为学号+姓名+ lab3.pdf。实验报告需要包含以下内容：
+请同学们在学在浙大上提交实验报告。格式要求为 pdf，命名为学号+姓名+ lab2.pdf。实验报告需要包含以下内容：
 
 * flag 文件的内容
 * Task2 和 Task3 的 PoC 代码
