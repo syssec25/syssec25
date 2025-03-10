@@ -1174,7 +1174,7 @@ p1<span class="w"> </span>Addr:0x5605b5dde2a0,world
 <p>其中 qemu.sh 是运行 qemu 的脚本，rootfs.img 为文件系统镜像，vmlinux 为未压缩的内核。可以利用 gdb-multiarch 和 qemu 对vmlinux 进行调试。</p>
 <p>同时提供了有 BUG 的设备驱动代码，同学们可以自行查看。</p>
 <h3 id="51">5.1 实验环境搭建</h3>
-<p>通过浙大云盘<a href="https://pan.zju.edu.cn/share/020138858d0479ba0a1906893b">链接</a>下载本次实验压缩包，并解压到lab2的 virtual box 实验镜像中。</p>
+<p>通过浙大云盘<a href="https://pan.zju.edu.cn/share/020138858d0479ba0a1906893b">链接</a>下载本次实验压缩包，并解压到lab1的 virtual box 实验镜像中。</p>
 <p>解压之后路径如下</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -1194,7 +1194,7 @@ p1<span class="w"> </span>Addr:0x5605b5dde2a0,world
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
-<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code>syssec@VM:~/lab3$<span class="w"> </span>tree
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code>syssec@VM:~/lab2$<span class="w"> </span>tree
 .
 ├──<span class="w"> </span>kernel
 │<span class="w">   </span>├──<span class="w"> </span>cfi
@@ -1218,7 +1218,7 @@ p1<span class="w"> </span>Addr:0x5605b5dde2a0,world
 <blockquote>
 <p>注意⚠️：<strong>本次实验环境既没有KASLR也没有SMAP防护</strong></p>
 </blockquote>
-<p>我们提供了编译好的内核镜像(Image)和gdb调试用的vmlinux（symbol可能会有问题）。也可以尝试自己将 <code>uafdriver.c</code> 驱动放到lab2所在的内核源码中(<code>drivers/misc/</code> 路径下)，再修改同文件夹下的 <code>Makefile</code>，增加一行</p>
+<p>我们提供了编译好的内核镜像(Image)和gdb调试用的vmlinux（symbol可能会有问题）。也可以尝试自己将 <code>uafdriver.c</code> 驱动放到lab1所在的内核源码中(<code>drivers/misc/</code> 路径下)，再修改同文件夹下的 <code>Makefile</code>，增加一行</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">obj</span><span class="o">-</span><span class="n">y</span><span class="w">          </span><span class="o">+=</span><span class="w">      </span><span class="n">uafdriver</span><span class="p">.</span><span class="n">o</span>
 </code></pre></div></td></tr></table></div>
 <p>然后重新交叉编译内核源码即可。
@@ -1483,7 +1483,7 @@ password：123
 <li>重新运行JOP攻击程序，查看是否CFI是否能起作用。<strong>提交dmesg中包含CFI Failure截图</strong>。</li>
 </ul>
 <h2 id="7">7. 实验提交</h2>
-<p>请同学们在学在浙大上提交实验报告。格式要求为 pdf，命名为学号+姓名+ lab3.pdf。实验报告需要包含以下内容：</p>
+<p>请同学们在学在浙大上提交实验报告。格式要求为 pdf，命名为学号+姓名+ lab2.pdf。实验报告需要包含以下内容：</p>
 <ul>
 <li>flag 文件的内容</li>
 <li>Task2 和 Task3 的 PoC 代码</li>
