@@ -208,6 +208,7 @@ commit_cred 函数用于给当前进程设置新的 cred 结构体。通过调�
 本次实验提供了两种方式进行环境配置，任选一种
 
 1.VirtualBox 虚拟机（⚠️注意arm mac无法正常运行这个虚拟机，windows可以），虚拟机环境为 Ubuntu20.04，用户名和密码均为 syssec（ubuntu-lab1.zip和ubuntu-lab1.z01都要下载，全部完毕之后将zip文件正常解压）；
+
 2.如果你嫌下载、安装虚拟机麻烦或是arm mac，可以只下载**不包含虚拟机的源文件** `lab1-source.zip`，自行进行环境配置。
 
   - 点击[百度网盘链接](https://pan.baidu.com/s/1JuQ2T17iFZ4ssPpj8p8m4A?pwd=bedq),访问码：bedq
