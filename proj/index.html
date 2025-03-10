@@ -1,0 +1,862 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://syssec25/proj/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+    
+    
+      
+        <title>Final Project 列表与要求 - 浙江大学25年春夏系统安全实验</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#final-project" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="浙江大学25年春夏系统安全实验" class="md-header__button md-logo" aria-label="浙江大学25年春夏系统安全实验" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            浙江大学25年春夏系统安全实验
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Final Project 列表与要求
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/syssec25/syssec25" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    syssec25/syssec25
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="浙江大学25年春夏系统安全实验" class="md-nav__button md-logo" aria-label="浙江大学25年春夏系统安全实验" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    浙江大学25年春夏系统安全实验
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/syssec25/syssec25" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    syssec25/syssec25
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 软件供应链安全相关Project
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 软件供应链安全相关Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 面向垂直领域的供应链分析
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 编程语言分析工具
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-rustc" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 Rust/C跨语言调用分析
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 操作系统安全相关Project
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 操作系统安全相关Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-ebpf" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 基于eBPF的内核状态监控与防护
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-ebpfrootkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 基于eBPF的内核rootkit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-mte" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 基于MTE的内存完整性保护
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-codeqlmacos" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 基于CodeQL的MacOS数据流分析
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5 针对闭源软件的模糊测试
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aiproject" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 系统安全与AI交叉Project
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 系统安全与AI交叉Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 基于大模型的软件漏洞检测
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 基于大模型的系统设计
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 基于大模型的逻辑漏洞检测
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 基于人工智能的漏洞代码检测定位
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mcu-rehosting-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. MCU rehosting 相关Project
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. MCU rehosting 相关Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-emulater" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 基于emulater的外设支持
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-mcu-rehosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 支持多种处理器架构的MCU rehosting框架
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-androidproject" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Android系统相关Project
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Android系统相关Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-android" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Android应用第三方库检测
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-android" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Android应用逃逸技术检测
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Groups
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="final-project">Final Project 列表与要求</h1>
+<h2 id="1-project">1. 软件供应链安全相关Project</h2>
+<h3 id="11">1.1 面向垂直领域的供应链分析</h3>
+<p>背景：当前复杂软件系统多均依赖第三方组件构建其功能，形成软件供应链。而这些第三方组件会存在漏洞，引入一系列的安全问题。针对垂直领域的软件系统进行软件成分分析是当前的一个研究热点。</p>
+<p>描述：从鸿蒙系统，云原生系统，AI系统，Web系统等垂直领域类中选一个类系统，收集相关成分分析论文，进行软件成分分析。</p>
+<p>里程碑：综述、系统爬取、工具实现、系统分析；<br />
+中期（第3周）完成：综述、系统爬取<br />
+期末（第6周）完成：工具实现、系统分析；</p>
+<p>参考文档： </p>
+<ol>
+<li>An Exploratory Study of Deep Learning Supply Chain</li>
+</ol>
+<h3 id="12">1.2 编程语言分析工具</h3>
+<p>背景：当前软件系统功能日益复杂，代码量大，通过人工遍历所有代码已不可行。因此研究人员提出静态技术对代码进行分析，无需运行代码，具有可扩展性强，效率高等特点。</p>
+<p>描述：从Java、Rust、NPM、Go、Python中选择一门语言，收集相关静态分析论文，对分析工具进行复现，进而分析到整个语言生态的软件包。</p>
+<p>里程碑：综述、系统爬取、工具实现、系统分析；<br />
+中期（第3周）完成：综述、系统爬取<br />
+期末（第6周）完成：工具实现、系统分析；</p>
+<p>参考文档： </p>
+<ol>
+<li>MirChecker: Detecting Bugs in Rust Programs via Static Analysis</li>
+<li>RUDRA: Finding Memory Safety Bugs in Rust at the Ecosystem Scale</li>
+</ol>
+<h3 id="13-rustc">1.3 Rust/C跨语言调用分析</h3>
+<p>背景：Rust通常用于比较底层的项目，与C的语言规范相近，因此开发者为避免重写代码会重用C代码，因此会使用跨语言调用机制。如果C语言部分存在问题，或者跨语言接口抽象存在问题，都是难以修复或者滞后修复的。</p>
+<p>描述：因此我们需要分析Rust生态中的library以及面向用户的Rust应用使用跨语言调用的情况，找到真实的CVE，同时设计PoC对CVE进行利用，并给出防护思路。</p>
+<p>里程碑：综述、PoC实现、多个PoC，防护思路；</p>
+<p>中期（第3周）完成：综述、PoC实现<br />
+期末（第6周）完成：多个PoC，防护思路</p>
+<p>参考文档： 
+1. Cross-Language Attacks, NDSS 22</p>
+<h2 id="2-project">2. 操作系统安全相关Project</h2>
+<h3 id="21-ebpf">2.1 基于eBPF的内核状态监控与防护</h3>
+<p>背景：Extended Berkeley Packet Filter(eBPF)是一个Linux子系统，它允许在不修改内核的前提下，在内核中动态加载并安全地执行不受信任的用户自定义扩展。尽管允许用户在内核中执行任意代码一直被认为是不明智的，但BPF通过一系列的机制(verifier)确保了安全性。如今eBPF在系统跟踪、观测、性能调优、网络和安全等领域发挥重要的角色，孵化了很多知名项目，如cilium，sysdig falco等，有人甚至提出eBPF可能会促进微内核化的进程，并称其为超能力。eBPF提供的针对内核与用户进程的高可观测性对复杂环境(如云原生环境)的性能、安全等的监视与防护具有重要意义，而其在安全领域的潜在恶意利用，也引起了广泛的关注。</p>
+<p>描述：本项目通过层层递进的方式逐渐深入BPF的内核观测与保护，涵盖了eBPF的各个方面，包括：观测，防护，自定义内核处理逻辑，配套工具使用和前沿探索性质的研究。</p>
+<p>里程碑：</p>
+<ol>
+<li>理解内核中BPF的作用原理，包含sysdig falco架构（综述）。</li>
+<li>参考sysdig falco，实现eBPF程序，观测不少于5种内核数据（实现）。</li>
+</ol>
+<p>中期（第3周）完成：综述<br />
+期末（第6周）完成：实现</p>
+<p>参考文档：</p>
+<ol>
+<li>Calavera D, Fontana L. Linux Observability with BPF: Advanced Programming for Performance Analysis and Networking[M]. O'Reilly Media, 2019.</li>
+<li>Gregg B. BPF Performance Tools[M]. Addison-Wesley Professional, 2019.</li>
+<li>Vieira M A M, Castanho M S, Pacífico R D G, et al. Fast packet processing with ebpf and xdp: Concepts, code, challenges, and applications[J]. ACM Computing Surveys (CSUR), 2020, 53(1): 1-36.</li>
+<li><a href="https://www.brendangregg.com/index.html">Brendan Gregg's Homepage</a></li>
+<li><a href="https://github.com/iovisor/bcc">BPF Compiler Collection (BCC)</a></li>
+<li><a href="https://github.com/brendangregg/FlameGraph">Flame Graphs visualize profiled code</a></li>
+<li><a href="https://security.tencent.com/index.php/blog/msg/206">云原生安全攻防｜使用eBPF逃逸容器技术分析与实践</a></li>
+<li><a href="https://www.cnxct.com/container-escape-in-linux-kernel-space-by-ebpf/">内核态eBPF程序实现容器逃逸与隐藏账号rootkit</a></li>
+<li><a href="https://defcon.org/html/defcon-29/dc-29-speakers.html#path">Warping Reality - creating and countering the next generation of Linux rootkits using eBPF</a></li>
+<li><a href="https://www.blackhat.com/us-21/briefings/schedule/#with-friends-like-ebpf-who-needs-enemies-23619">With Friends Like eBPF, Who Needs Enemies?</a></li>
+</ol>
+<h3 id="22-ebpfrootkit">2.2 基于eBPF的内核rootkit</h3>
+<p>背景：同上</p>
+<p>描述：利用BPF实现rootkit，对cron无感知地插入后门，可以执行任意命令或向攻击方发起反向连接，并设计利用BPF的，对BPF恶意利用的检测系统框架(基于规则的面向BPF syscall的检测，如非预期用户挂载了敏感类型探针)</p>
+<p>里程碑：</p>
+<ol>
+<li>理解内核中BPF的作用原理，收集2种已有的eBPF rootkit，阐述其原理（综述）。</li>
+<li>扩展已有eBPF rootkit，实现2种新功能（实现）。</li>
+</ol>
+<p>中期（第3周）完成：综述<br />
+期末（第6周）完成：实现</p>
+<p>参考文档：同上</p>
+<h3 id="23-mte">2.3 基于MTE的内存完整性保护</h3>
+<p>背景：内存损坏漏洞仍然是最常见且后果最严重的漏洞之一，它既包括栈溢出、堆溢出等空间维度上的漏洞，也包括重复释放（Double-free）和释放后使用（Use-after-free）等时间维度上的漏洞。硬件厂商提出了不同种类的硬件支持来高效地缓解内存损坏漏洞，而Memory Tagging Extension（MTE）就是其中之一。</p>
+<p>Arm在2019年发布的ARMv8.5硬件规范中首次提出了MTE，它用4个比特位对每16字节的内存进行着色，而指针的高位同样有4个比特位标记指针的颜色。如此，只有当指针颜色和内存颜色一致时访存操作才是合法的。</p>
+<p><img alt="image" src="../img/mte-overview.png" /></p>
+<p>如上图所示，MTE同时能防护时空两个维度上的内存损坏漏洞，因此近年来受到工业界和学术界的广泛关注。然而，目前还缺乏可行的基于MTE的对内核内存进行实时保护的方法，由于内核安全的重要性和MTE硬件提供的高性能安全能力，如何将二者有机结合已经成为近年来研究的关注焦点。</p>
+<p>描述：本项目旨在使同学们入门硬件辅助安全（Hardware-assisted security）这一热门领域，同时深入了解MTE这一新兴的硬件安全特性。</p>
+<p>里程碑：
+1. 阅读参考文档并收集更多的相关资料和文献，总结MTE的优缺点 (综述)
+2. 成功编译支持MTE的Linux内核并在QEMU上运行，同时运行一个被保护的程序 （实现）。</p>
+<p>中期（第3周）完成：综述<br />
+期末（第6周）完成：实现</p>
+<p>参考文档：  </p>
+<ol>
+<li><a href="https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Arm_Memory_Tagging_Extension_Whitepaper.pdf">ARM MTE白皮书</a></li>
+<li><a href="https://juejin.cn/post/7013595058125406238">内存问题的终极武器——MTE</a></li>
+<li><a href="https://arxiv.org/pdf/1802.09517.pdf">Memory Tagging and how it improves C/C++ memory safety</a></li>
+<li><a href="https://www.kernel.org/doc/html/latest/arm64/memory-tagging-extension.html">Memory Tagging Extension (MTE) in AArch64 Linux</a></li>
+<li><a href="https://arxiv.org/pdf/2204.03781.pdf">Color My World: Deterministic Tagging for Memory Safety</a></li>
+</ol>
+<h3 id="24-codeqlmacos">2.4 基于CodeQL的MacOS数据流分析</h3>
+<p><strong>本项目不需要在苹果电脑或苹果操作系统上进行，CodeQL数据库由助教提供</strong></p>
+<p>背景：CodeQL是一个静态分析引擎，其将代码转化成数据库的形式供研究人员进行查询。macOS于2000年由苹果公司发行，macOS系统采用混合内核架构，内核由macOS核心内核 (X is Not Unix，XNU) 和内核扩展 (Kernel Extension) 两部分构成。近年来，一部分研究人员使用CodeQL对XNU进行数据流分析，找到了不少漏洞。</p>
+<p>描述：本项目通过了解CodeQL与XNU的基本知识，仿照已有研究结果进一步编写查询代码尝试对XNU进行数据流分析，从而寻找潜在的漏洞。</p>
+<p>里程碑：
+1. 阅读参考文档并搜集更多相关资料，总结CodeQL与现有通过CodeQL挖掘XNU漏洞工作的优缺点（综述）；
+2. 构造 整数溢出/UAF/OOB (视难度三选二或者三选一) 的漏洞查询语句（实现）。</p>
+<p><strong>漏洞查询语句通常只有几十行代码</strong></p>
+<p>中期（第3周）完成：综述</p>
+<p>期末（第6周）完成：实现</p>
+<p>参考文档：</p>
+<ol>
+<li>MUHE. <a href="https://o0xmuhe.github.io/2021/02/15/CodeQL-XNU-From-0-to-1/">CodeQL XNU From 0 to 1</a>. 2021.</li>
+<li>Kevin Backhouse. Apple's XNU Kernel: Finding a memory exposure vulnerability with CodeQL (CVE-2017-13782). Github Securitylab, 2017.</li>
+<li>Arsenii Kostomin. How to find multiple memory disclosures in XNU using CodeQL. ZER0CON 2023.</li>
+<li>Kevin Backhouse. Kernel crash caused by out-of-bounds write in Apple's ICMP packet-handling code (CVE-2018-4407). Github Securitylab, 2018.</li>
+</ol>
+<h3 id="25">2.5 针对闭源软件的模糊测试</h3>
+<p><strong>背景</strong>：模糊测试 (Fuzzing) 技术是一种自动化软件测试方法，通过向目标输入非法、畸形或非预期的输入，以发现软件缺陷和漏洞。近年来，随着针对开源软件Fuzzing的深入，针对<strong>闭源</strong>二进制软件也发展出较为成熟的灰盒Fuzzing技术，比如针对Windows的[1]。为提高Fuzzing效率，现代Fuzzing工具常引入反馈机制，根据程序的运行状态，评价测试输入的质量或调整输入的变异策略。代表性Fuzzer如AFL[2] 提出使用程序代码覆盖率作为反馈信号。代码覆盖率指针对一次输入，对PC寄存器（x86/x64的EIP/RIP）进行采样。通过代码覆盖率能分析程序的运行情况（针对当前的测试输入，能够获得程序走了多少代码）。</p>
+<p><strong>描述</strong>：</p>
+<p>一、主流的Fuzzing工作最为重要就是做到代码覆盖率的采集，但想要做到这件事情还需要考虑到性能需求、实现难度等等。比如针对三星Android 10的闭源库，通过复现已有工作（编写loader程序动态链接闭源库来调用闭源库中的函数，而不是在安卓模拟器中进行fuzzing，以提升fuzzing的速度），7小时4核并行能挖到12个导致crash的潜在漏洞。</p>
+<p><img src=https://gitee.com/zjusec/syssec23-stu/raw/master/docs/img/fuzzing-samsung.png width=40% /></p>
+<p>二、针对近期Android、IOS版微信在扫描如下二维码（或从聊天框打开该图片）就会崩溃的情况，助教改写了之前的loader使其调用微信的扫码模块，以便对微信的扫码模块进行Fuzzing。即便后续报道[3]出微信的二维码扫描代码是开源的，不需要使用灰盒Fuzzing方法，但使用灰盒Fuzzing的方法可以对几乎任意的二进制进行测试，所以这也是有意义的。比如做完微信的，使用同一套方法可以去测试美团、支付宝、淘宝等等任意拥有二维码扫描功能的App。同时，不只是二维码扫描，只要是涉及到图片、音频、视频等编码解码 (codec) 的闭源库都可以用同一套方法进行Fuzzing。</p>
+<p><img src=https://gitee.com/zjusec/syssec23-stu/raw/master/docs/img/fuzzing-qr.png width=20% /></p>
+<p>但和三星闭源库fuzzing不同，这里使用loader调用微信的闭源库存在全局变量初始化的问题（下图<code>qword_51A3A8</code>没有初始化），如果直接调用微信扫描二维码的接口<code>ScanImage</code>便会导致程序出现正常运行时不应该存在的崩溃（下图crash的汇编代码中<code>x0</code>便是IDA中的<code>v7[5]</code>），导致无法进行正常的fuzzing。</p>
+<p><img alt="不能正常fuzz微信扫码库的原因" src="../img/fuzzing-crash.png" /></p>
+<p>里程碑（<strong>2、3任选其一</strong>）：</p>
+<ol>
+<li>阅读参考文档并搜集更多相关资料，总结现有针对Windows、Android闭源库、MacOS等的Fuzzing工作（综述）；</li>
+<li>（<strong>可选</strong>）复现一个近期对 Windows 或 Android闭源库 或 MacOS等 的Fuzzing的工作（复现）；</li>
+<li>（<strong>可选</strong>）探究如何运行微信扫码模块的fuzzing（可以考虑的方法大致有三种: 1. 不使用loader，而使用Frida Fuzzer[4]等工具在安卓模拟器中进行fuzzing；2. 加入JVM的支持，编写Java配置程序与loader程序完成全局变量的初始化、动态链接闭源库来调用闭源库中的函数；3. 逆向微信如何做的全局变量/配置初始化，然后在loader程序调用微信二维码库进行对应的初始化）（创新）；</li>
+</ol>
+<p>中期（第3周）完成：1 (综述)</p>
+<p>期末（第6周）完成：2<strong>或</strong>3 （复现<strong>或</strong>创新）</p>
+<p>参考文档：</p>
+<ol>
+<li>WINNIE: Fuzzing Windows Applications with Harness Synthesis and Fast Cloning. NDSS 2021.</li>
+<li><a href="https://github.com/google/AFL">American fuzzy lop: A security-oriented fuzzer</a></li>
+<li><a href="https://mp.weixin.qq.com/s/0Q_jLiZqyaULchFIwTR3bg">微信二维码崩溃后续 转发一个靠谱的分析</a></li>
+<li><a href="https://github.com/idhyt/AndroidFridaFuzz">idhyt/AndroidFridaFuzz: android app native so fuzz. efficiently run in a real machine with frida environment. (github.com)</a></li>
+</ol>
+<h2 id="3-aiproject">3. 系统安全与AI交叉Project</h2>
+<h3 id="31">3.1 基于大模型的软件漏洞检测</h3>
+<p>背景：随着ChatGPT的风靡，现在已有一些工作将其应用到安全上，取得了一些初步的成果。然而大模型和ChatGPT如何与安全结合依然需要更多研究。</p>
+<p>描述：本项目旨在鼓励同学们探索将AI与安全结合的新型方式。</p>
+<p>里程碑：
+1. 查阅相关资料、论文，总结现有工作如何结合AI与安全；
+2. 对现有结果进行复现；
+3. 将技术扩展到新的领域；
+4. 获得新的结果。</p>
+<p>中期（第3周）完成：1，2<br />
+期末（第6周）完成：3，4</p>
+<p>参考文档：</p>
+<ol>
+<li>Lost at C: A User Study on the Security Implications of Large Language Model Code Assistants</li>
+<li>https://medium.com/codex/chatgpt-detects-vulnerabilities-in-npm-and-python-packets-2156aeafc6d6</li>
+</ol>
+<h3 id="32">3.2 基于大模型的系统设计</h3>
+<p>背景：同上</p>
+<p>描述：本项目旨在鼓励同学们将AI作为工具，应到到系统安全设计中。</p>
+<p>里程碑：
+1. 查阅相关资料、论文，总结在系统安全中如何应用ChatGPT；
+2. 对现有结果进行复现；
+3. 将技术扩展到新的领域；
+4. 获得新的结果。</p>
+<p>中期（第3周）完成：1，2
+期末（第6周）完成：3，4</p>
+<p>参考文档：</p>
+<p>https://www.bilibili.com/video/BV19h4y1W7th/</p>
+<h3 id="33">3.3 基于大模型的逻辑漏洞检测</h3>
+<p>背景：
+逻辑漏洞危害严重，传统静态分析方法不能理解代码逻辑，难以实现逻辑漏洞的自动化检测。大模型具有代码逻辑理解能力，已有科研成果表明大模型具备实现代码逻辑理解与逻辑漏洞自动化检测的能力（如针对智能合约代码的GPTScan）。</p>
+<p>描述：
+本项目旨在使同学们结合传统分析与大模型，针对现有开源项目代码上的各类逻辑类漏洞，开展自动化检测技术的研究，弥补技术空白。针对权限校验、身份验证、支付逻辑3类逻辑问题实现自动化漏洞检测。
+里程碑：收集开源逻辑漏洞数据集、大模型训练与评估、系统分析；</p>
+<p>参考文档：</p>
+<p>GPTScan: Detecting Logic Vulnerabilities in Smart Contracts by Combining GPT with Program Analysis
+https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg</p>
+<p>LineVul: A Transformer-based Line-Level Vulnerability Prediction</p>
+<h3 id="34">3.4 基于人工智能的漏洞代码检测定位</h3>
+<p>背景：
+人工开展代码漏洞挖掘费时费力，传统静态漏洞检测能够实现自动化识别疑似漏洞点，但误报率较高且难以检测复杂的上下文漏洞。基于人工智能的漏洞代码检测定位具有理解代码上下文相关性并对特征进行多层概括和抽象的能力，通过模型的自身泛化能力自动检测代码中相似的漏洞，可代替人工开展疑似漏洞确认，有效提高检测效率。</p>
+<p>描述：
+本项目旨在使同学们了解漏洞挖掘的基本知识，学习训练深度学习模型进行漏洞检测任务。更进一步尝试通过多种模型优化策略提升模型定位漏洞的效果，比如进行更细粒度的程序切片、使用包含更多语义信息的代码标识方法、提高模型识别漏洞根因位置的能力等。
+里程碑：收集漏洞标注数据集、模型训练与评估、系统分析</p>
+<p>参考文档：</p>
+<p>VulChecker: Graph-based Vulnerability Localization in Source Code
+https://github.com/ymirsky/VulChecker</p>
+<p>Devign: Effective vulnerability identification by learning comprehensive program semantics via graph neural networks</p>
+<h2 id="4-mcu-rehosting-project">4. MCU rehosting 相关Project</h2>
+<h3 id="41-emulater">4.1 基于emulater的外设支持</h3>
+<p>背景：
+由于硬件和固件之前的紧密耦合，以及缺乏外设模型支持，微控制器（MCU）的固件模拟具有一定挑战性。这也极大的阻碍了动态分析工具在固件分析中的应用，影响了固件漏洞挖掘和其他安全分析的进展。因此，如何构建外设模型，模拟具有位置外设的固件是一个重要的研究问题。</p>
+<p>描述：
+本项目旨在使同学们深入理解嵌入式系统安全，掌握MCU的固件模拟及其外设支持。</p>
+<p>里程碑：
+1. 根据参考文档中的论文和其他相关论文，总结出模拟外设需要的条件，当前外设模拟的困难和不同方法的优缺点等重要内容 ，写一份简单但要点内容齐全的综述 
+2. 根据所完成综述，复现一篇/多篇论文，并提出更优的方法运用其中</p>
+<p>中期完成：里程碑1</p>
+<p>期末完成：里程碑2</p>
+<p>参考文档：</p>
+<ol>
+<li>https://dl.acm.org/doi/pdf/10.1145/3433210.3453093</li>
+<li>https://dl.acm.org/doi/pdf/10.1145/3423167</li>
+<li>https://www.usenix.org/system/files/sec20-feng.pdf</li>
+<li>https://www.usenix.org/system/files/sec21-zhou.pdf</li>
+<li>https://dl.acm.org/doi/pdf/10.1145/3545948.3545957</li>
+</ol>
+<h3 id="42-mcu-rehosting">4.2 支持多种处理器架构的MCU rehosting框架</h3>
+<p>背景：
+大多数rehosting框架只支持ARM或x86等常见架构，但在一些特定场景下，有许多非常规架构的固件。例如智能互联网汽车的场景中，有C166，RH850，V850，SH-2A等汽车固件中的特定架构。如何针对这些架构的MCU进行rehosting具有挑战性，也同时是一项研究重点。
+描述：本项目旨在使同学们深入理解不同架构的MCU如何rehosting，学习如何构建architecture- agnostic的MCU rehosting的框架，并在此基础上对固件进行动态分析，例如fuzzing</p>
+<p>里程碑：
+1. 构建支持多种处理器架构的MCU rehosting框架 
+2. 在该框架上对固件进行动态分析如fuzzing</p>
+<p>中期完成：里程碑1</p>
+<p>期末完成：里程碑2</p>
+<p>参考文档：</p>
+<ol>
+<li>https://dl.acm.org/doi/pdf/10.1145/3433210.3453093</li>
+<li>https://dl.acm.org/doi/pdf/10.1145/3423167</li>
+<li>https://arxiv.org/pdf/2208.03528</li>
+<li>https://arxiv.org/pdf/2301.13346</li>
+</ol>
+<h2 id="5-androidproject">5. Android系统相关Project</h2>
+<h3 id="51-android">5.1 Android应用第三方库检测</h3>
+<p>背景: 第三方库（TPL）给Android应用程序提供了可重用的功能，极大的促进了Android应用的开发，已经成为移动生态系统中必不可少的组成部分。然而，TPL的广泛使用也会引入相关安全问题，应用程序中TPL组件信息并非是透明的，甚至开发人员可能也不知道使用了哪些TPL，检测Android应用中的TPL对于恶意软件检测、隐私泄露检测等下游任务至关重要。</p>
+<p>描述: 本项目旨在使同学们入门Android系统安全领域，了解Android应用的体系结构，同时深入探究Android应用第三方库的检测方法。</p>
+<p>里程碑:</p>
+<ol>
+<li>阅读参考文档并收集更多相关资料和文献，总结Android第三方库检测方法及其优缺点（综述）；</li>
+<li>复现近期针对Android第三方库检测的工作（复现）；</li>
+<li>提出具有混淆弹性，能识别动态加载的TPL的检测思路 （思路）。</li>
+</ol>
+<p>中期（第3周）完成：1 </p>
+<p>期末（第6周）完成：2，3 </p>
+<p>参考文档:</p>
+<ol>
+<li>Zhan X, Fan L, Liu T, et al. Automated third-party library detection for android applications: Are we there yet?[C]//Proceedings of the 35th IEEE/ACM International Conference on Automated Software Engineering. 2020: 919-930.</li>
+<li>Zhan X, Fan L, Chen S, et al. Atvhunter: Reliable version detection of third-party libraries for vulnerability identification in android applications[C]//2021 IEEE/ACM 43rd International Conference on Software Engineering (ICSE). IEEE, 2021: 1695-1707.</li>
+<li>Wu Y, Sun C, Zeng D, et al. LibScan: towards more precise third-party library identification for android applications[C]//Proceedings of the 32nd USENIX Conference on Security Symposium. 2023: 3385-3402.</li>
+</ol>
+<h3 id="52-android">5.2 Android应用逃逸技术检测</h3>
+<p>背景:</p>
+<p>随着 Android 应用程序使用量的持续增长，确保Android应用的安全性至关重要，相关研究通过动静态分析的方法检测Android恶意应用或隐私泄漏等。然而，越来越多的恶意应用程序采用逃逸技术（反分析技术）来逃避安全分析。</p>
+<p>描述:</p>
+<p>本项目旨在使同学们了解Android应用分析技术，同时深入探究Android应用的逃逸技术。</p>
+<p>里程碑:</p>
+<ol>
+<li>阅读参考文档并收集更多相关资料和文献，对Android应用使用的逃逸技术及其实现方法进行收集和分类总结；</li>
+<li>（可选）复现检测Android应用逃逸技术的工作（复现）；</li>
+<li>（可选）实现一个可以检测部分Android应用逃逸技术的工具（实现）。</li>
+</ol>
+<p>中期（第3周）完成：1 </p>
+<p>期末（第6周）完成：2或3 </p>
+<p>参考文档:</p>
+<ol>
+<li>Xue L, Zhou H, Luo X, et al. Happer: Unpacking android apps via a hardware-assisted approach[C]//2021 IEEE Symposium on Security and Privacy (SP). IEEE, 2021: 1641-1658.</li>
+<li>Kondracki B, Azad B A, Miramirkhani N, et al. The droid is in the details: Environment-aware evasion of android sandboxes[C]//Proceedings of the 29th Network and Distributed System Security Symposium (NDSS). 2022.</li>
+<li>Afonso V, Kalysch A, Müller T, et al. Lumus: Dynamically uncovering evasive Android applications[C]//Information Security: 21st International Conference, ISC 2018, Guildford, UK, September 9–12, 2018, Proceedings 21. Springer International Publishing, 2018: 47-66.</li>
+<li>Hammad M, Garcia J, Malek S. A large-scale empirical study on the effects of code obfuscations on android apps and anti-malware products[C]//Proceedings of the 40th international conference on software engineering. 2018: 421-431.</li>
+</ol>
+<h2 id="6-groups">6. Groups</h2>
+<p>1.1 <br />
+1.2 <br />
+1.3  </p>
+<p>2.1 <br />
+2.2<br />
+2.3  <br />
+2.4<br />
+2.5 </p>
+<p>3.1 <br />
+3.2 
+3.3 
+3.4 </p>
+<p>4.1 
+4.2</p>
+<p>5.1 
+5.2</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+    
+  </body>
+</html>
