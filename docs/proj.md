@@ -7,7 +7,7 @@ eBPF（Extended Berkeley Packet Filter）是Linux内核在3.18版本引入的一
 **描述：**
 利用BPF实现rootkit，对cron无感知地插入后门，可以执行任意命令或向攻击方发起反向连接，并设计利用BPF的，对BPF恶意利用的检测系统框架(基于规则的面向BPF syscall的检测，如非预期用户挂载了敏感类型探针)
 
-**里程碑：**
+里程碑：
 
 1. 理解内核中BPF的作用原理，收集2种已有的eBPF rootkit，阐述其原理（综述）。
 2. 扩展已有eBPF rootkit，实现2种新功能（实现）。
@@ -16,7 +16,7 @@ eBPF（Extended Berkeley Packet Filter）是Linux内核在3.18版本引入的一
 
 期末（第16周）完成：实现
 
-**参考文档：**
+参考文档：
 
 1. [What is eBPF？](https://ebpf.io/what-is-ebpf/)
 2. [BPF and XDP Reference Guide](https://docs.cilium.io/en/stable/bpf/)
@@ -31,7 +31,7 @@ eBPF（Extended Berkeley Packet Filter）是Linux内核在3.18版本引入的一
 **描述：**
 eBPF Verifier是Linux内核安全的关键组件，程序在加载之前必须经过Verifier验证，Verifier会检查每个可能执行的程序指令序列，在确保满足所有eBPF安全假设后方可执行。虽然验证器的代码已经经过了层层审查，但随着 eBPF 中不断添加新功能以及Verifier自身功能的复杂性，其中难免存在漏洞，一旦被恶意利用，极可能引发严重后果。
 
-**里程碑：**
+里程碑：
 
 1. 了解Verifier的功能和实现方式，解释Verifier的复杂性以及其中可能存在的漏洞（综述）。
 2. 实战利用2~3个Verifier漏洞，实现系统提权、容器逃逸、系统奔溃等任意两个攻击（实现）。
@@ -41,7 +41,7 @@ eBPF Verifier是Linux内核安全的关键组件，程序在加载之前必须�
 
 期末（第16周）完成：实现
 
-**参考文档：**
+参考文档：
 
 1. [What is eBPF？](https://ebpf.io/what-is-ebpf/)
 2. [BPF and XDP Reference Guide](https://docs.cilium.io/en/stable/bpf/)
@@ -58,7 +58,7 @@ eBPF Verifier是Linux内核安全的关键组件，程序在加载之前必须�
 **描述：**
 本项目旨在使同学们了解漏洞挖掘的基本知识，学习训练多种神经网络模型进行漏洞检测任务。更进一步尝试通过多种模型优化策略提升模型定位漏洞的效果，比如进行更细粒度的程序切片、使用包含更多语义信息的代码标识方法、提高模型识别漏洞根因位置的能力等。
 
-**里程碑：**
+里程碑：
 
   1. 理解神经网络模型检测源代码漏洞的技术原理，调研三篇现有源代码漏洞检测工作，综述其核心方法及工作
   2. 实现已有源代码漏洞检测模型，在测试集上提升准确度
@@ -67,7 +67,7 @@ eBPF Verifier是Linux内核安全的关键组件，程序在加载之前必须�
 
   期末（第16周）完成: 实现
 
-**参考文档：**
+参考文档：
 1. VulChecker: Graph-based Vulnerability Localization in Source Code
 https://github.com/ymirsky/VulChecker
 2. Devign: Effective vulnerability identification by learning comprehensive program semantics via graph neural networks
@@ -84,7 +84,7 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 **描述：**
 本项目旨在使同学们了解Android应用分析技术，深入探究Android应用分析中的抗加固技术。
 
-**里程碑：**
+里程碑：
 
 1. 了解常见的代码混淆、加壳、环境检测等技术及其实现原理；
 2. （二选一）复现一个现有的去混淆、脱壳或环境对抗的工作（复现）；
@@ -94,7 +94,7 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 
 期末 （第16周） 完成：2或3
 
-**参考文档：**
+参考文档：
 
 1. Xue, L.; Zhou, H.; Luo, X.; Zhou, Y.; Shi, Y.; Gu, G.; Zhang, F.; Au, M. H. Happer: Unpacking Android Apps via a Hardware-Assisted Approach. In 2021 IEEE Symposium on Security and Privacy (SP); IEEE: San Francisco, CA, USA, 2021; pp 1641–1658. [https://doi.org/10.1109/SP40001.2021.00105](https://doi.org/10.1109/SP40001.2021.00105).
 2. Xue, L.; Zhou, H.; Luo, X.; Yu, L.; Wu, D.; Zhou, Y.; Ma, X. PackerGrind: An Adaptive Unpacking System for Android Apps. IIEEE Trans. Software Eng.2022, 48 (2), 551–570. [https://doi.org/10.1109/TSE.2020.2996433](https://doi.org/10.1109/TSE.2020.2996433).
@@ -109,13 +109,13 @@ Rust通常用于比较底层的项目，与C的语言规范相近，因此开发
 **描述：**
 因此我们需要分析Rust生态中的library以及面向用户的Rust应用使用跨语言调用的情况，找到真实的CVE，同时设计PoC对CVE进行利用，并给出防护思路。
 
-**里程碑：**
+里程碑：
 
 中期（第10周）完成：综述、PoC实现  
 
 期末（第16周）完成：多个PoC，防护思路
 
-**参考文档：** 
+参考文档： 
 
 1. Cross-Language Attacks, NDSS 22
 
@@ -131,13 +131,13 @@ Rust通常用于比较底层的项目，与C的语言规范相近，因此开发
 3. 实现对附件固件goodwatch.elf(MCU msp430)的rehosting，并记录运行日志。（该固件由助教提供）
 4. *（附加）对附件固件进行动态调试或模糊测试，并尝试进行漏洞挖掘。*
 
-**里程碑：**
+里程碑：
 
 中期（第10周）完成1
 
 期末（第16周）完成2、3
 
-**参考文档：**
+参考文档：
 
 1. Feng B, Mera A, Lu L. {P2IM}: Scalable and hardware-independent firmware testing via automatic peripheral interface modeling[C]//29th USENIX Security Symposium (USENIX Security 20). 2020: 1237-1254.
 2. Chen Z, Thomas S L, Garcia F D. Metaemu: An architecture agnostic rehosting framework for automotive firmware[C]//Proceedings of the 2022 ACM SIGSAC Conference on Computer and Communications Security. 2022: 515-529.
@@ -152,7 +152,7 @@ Rust通常用于比较底层的项目，与C的语言规范相近，因此开发
 **描述：**
 本项目通过系统性调研与实践，探索大模型代码评估的创新方法，涵盖了大模型的推理运行、评估标准创新设计运行、测试样例设计等多个关键环节。
 
-**里程碑：**
+里程碑：
 
 1. 总结和批判现有热门大模型生成代码评估指标，不低于**5**种（综述）。
 2. **自行设计**不同于热门评估指标的创新指标并**运行**这个指标。设计方面要求在上述*其他关键因素*中的一个方面创新。可参考开源代码，但不可抄袭。测试集和测试样例（如需）均需**自行设计**，数量**5~10**个即可。被测试的大模型数量不得低于**1**个（实现）。
@@ -161,7 +161,7 @@ Rust通常用于比较底层的项目，与C的语言规范相近，因此开发
 
 期末（第16周）完成：实现
 
-**参考文档：**
+参考文档：
 
 1. DeepSeek-AI, Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu, et al. 2025. “DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.” 
 2. DeepSeek-AI, Aixin Liu, Bei Feng, Bing Xue, Bingxuan Wang, Bochao Wu, Chengda Lu, et al. 2024. “DeepSeek-V3 Technical Report.” 
@@ -189,7 +189,7 @@ Arm在2019年发布的ARMv8.5硬件规范中首次提出了MTE，它用4个比�
 本项目旨在使同学们入门硬件辅助安全（Hardware-assisted security）这一热门领域，同时深入了解MTE这一新兴的硬件安全特性。
 
 
-**里程碑：**
+里程碑：
 
 1. 阅读参考文档并收集更多的相关资料和文献，总结MTE的优缺点 (综述)
 2. 成功编译支持MTE的Linux内核并在QEMU上运行，同时运行一个被保护的程序 （实现）。
@@ -198,7 +198,7 @@ Arm在2019年发布的ARMv8.5硬件规范中首次提出了MTE，它用4个比�
 
 期末（第16周）完成：实现
 
-**参考文档：**  
+参考文档：  
 1. [ARM MTE白皮书](https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Arm_Memory_Tagging_Extension_Whitepaper.pdf)
 2. [内存问题的终极武器——MTE](https://juejin.cn/post/7013595058125406238)
 3. [Memory Tagging and how it improves C/C++ memory safety](https://arxiv.org/pdf/1802.09517.pdf)
@@ -213,7 +213,7 @@ GPU驱动核心功能之一是实现用户态进程与GPU硬件间的共享内�
 **描述：**
 在前期课程和实验中，大家已掌握了UAF（use-after-free）漏洞基本原理、触发条件及利用方式。本实验要求同学们将UAF漏洞的研究拓展至GPU驱动安全领域，GPU驱动因其直接控制硬件资源的特性（如物理页表管理、内存映射等），成为攻击者突破系统隔离机制的重要目标。通过操控GPU驱动的漏洞，攻击者可能绕过CPU侧的安全防护。
 
-**里程碑：**
+里程碑：
 
 1. 通过公开漏洞库、学术论文等资源，自主检索近年公布的与GPU驱动相关的UAF漏洞案例（如内存管理、上下文切换等场景），分析其成因及利用链构造方式。（综述）
 2. 漏洞复现与验证：搭建支持存在漏洞的Mali GPU驱动的虚拟机实验环境，并且在实验环境中尝试复现1-2个漏洞，结合调试工具（如GDB、内核日志等）观察UAF触发时的系统行为，解释漏洞如何通过GPU驱动影响物理内存或内核完整性。（实现）
@@ -222,7 +222,7 @@ GPU驱动核心功能之一是实现用户态进程与GPU硬件间的共享内�
 
 期末（第16周）完成：实现
 
-**参考文档：**
+参考文档：
 
 1. [GPU 驱动漏洞：窥探驱动漏洞利用的技术奥秘](https://forum.butian.net/share/3924)
 2. [Mali Open Source Driver](https://linux-sunxi.org/Mali_Open_Source_Driver)
@@ -232,6 +232,7 @@ GPU驱动核心功能之一是实现用户态进程与GPU硬件间的共享内�
 
 ## 9.分组和展示
 本次final project采取自由分组，每组3人。请自行组队，并从给定题目中选择一个，确定分组和选题后，3.30之前将组员名单和选题填写至钉钉群共享文件。
+
 **注意**：每个题目最多2组选择，同选题小组间需协商确定不同研究方向，避免雷同。
 
 实验过程中将设置两次检查：
