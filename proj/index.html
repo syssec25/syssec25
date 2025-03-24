@@ -404,33 +404,41 @@
 eBPF（Extended Berkeley Packet Filter）是Linux内核在3.18版本引入的一项革命性技术。它允许用户在不修改内核源码或加载内核模块的情况下，动态地在内核中加载并执行用户自定义的扩展程序。eBPF依靠即时编译（JIT）技术和严格的静态验证机制（Verifier）来保障这些程序的安全运行。起初，它主要应用于网络数据包的过滤，但如今，其应用范围已经拓展到性能分析、安全监控等多个领域。然而，eBPF的强大功能也可能被攻击者所利用：它能够修改用户空间的内存，hook具有挂载点的内核函数，可被利用来更方便的实现Rootkit。同时，如果Verifier存在漏洞或配置不当，也可能导致内核提权或逃逸。</p>
 <p>描述：
 利用BPF实现rootkit，对cron无感知地插入后门，可以执行任意命令或向攻击方发起反向连接，并设计利用BPF的，对BPF恶意利用的检测系统框架(基于规则的面向BPF syscall的检测，如非预期用户挂载了敏感类型探针)</p>
-<p>里程碑：
-1. 理解内核中BPF的作用原理，收集2种已有的eBPF rootkit，阐述其原理（综述）。
-2. 扩展已有eBPF rootkit，实现2种新功能（实现）。</p>
-<p>中期（第10周）完成：综述<br />
-期末（第16周）完成：实现</p>
-<p>参考文档：
-1. <a href="https://ebpf.io/what-is-ebpf/">What is eBPF？</a>
-2. <a href="https://docs.cilium.io/en/stable/bpf/">BPF and XDP Reference Guide</a>
-3. <a href="https://defcon.org/html/defcon-29/dc-29-speakers.html#path">Warping Reality - creating and countering the next generation of Linux rootkits using eBPF</a>
-4. <a href="https://www.blackhat.com/us-21/briefings/schedule/#with-friends-like-ebpf-who-needs-enemies-23619">With Friends Like eBPF, Who Needs Enemies?</a>
-5. <a href="https://www.cnxct.com/container-escape-in-linux-kernel-space-by-ebpf/">内核态eBPF程序实现容器逃逸与隐藏账号rootkit</a></p>
+<p>里程碑：</p>
+<ol>
+<li>理解内核中BPF的作用原理，收集2种已有的eBPF rootkit，阐述其原理（综述）。</li>
+<li>扩展已有eBPF rootkit，实现2种新功能（实现）。</li>
+</ol>
+<p>中期（第10周）完成：综述  </p>
+<p>期末（第16周）完成：实现</p>
+<p>参考文档：</p>
+<ol>
+<li><a href="https://ebpf.io/what-is-ebpf/">What is eBPF？</a></li>
+<li><a href="https://docs.cilium.io/en/stable/bpf/">BPF and XDP Reference Guide</a></li>
+<li><a href="https://defcon.org/html/defcon-29/dc-29-speakers.html#path">Warping Reality - creating and countering the next generation of Linux rootkits using eBPF</a></li>
+<li><a href="https://www.blackhat.com/us-21/briefings/schedule/#with-friends-like-ebpf-who-needs-enemies-23619">With Friends Like eBPF, Who Needs Enemies?</a></li>
+<li><a href="https://www.cnxct.com/container-escape-in-linux-kernel-space-by-ebpf/">内核态eBPF程序实现容器逃逸与隐藏账号rootkit</a></li>
+</ol>
 <h2 id="12-ebpfverify">1.2 eBPF的Verify模块的漏洞发现与利用</h2>
 <p>背景：同上</p>
 <p>描述：
 eBPF Verifier是Linux内核安全的关键组件，程序在加载之前必须经过Verifier验证，Verifier会检查每个可能执行的程序指令序列，在确保满足所有eBPF安全假设后方可执行。虽然验证器的代码已经经过了层层审查，但随着 eBPF 中不断添加新功能以及Verifier自身功能的复杂性，其中难免存在漏洞，一旦被恶意利用，极可能引发严重后果。</p>
-<p>里程碑：
-1. 了解Verifier的功能和实现方式，解释Verifier的复杂性以及其中可能存在的漏洞（综述）。
-2. 实战利用2~3个Verifier漏洞，实现系统提权、容器逃逸、系统奔溃等任意两个攻击（实现）。
-3. （选做）对已有eBPF的自动化漏洞发现程序的复现和改进，尝试发现新的漏洞。</p>
-<p>中期（第10周）完成：综述<br />
-期末（第16周）完成：实现</p>
-<p>参考文档：
-1. <a href="https://ebpf.io/what-is-ebpf/">What is eBPF？</a>
-2. <a href="https://docs.cilium.io/en/stable/bpf/">BPF and XDP Reference Guide</a>
-3. <a href="https://defcon.org/html/defcon-29/dc-29-speakers.html#path">Warping Reality - creating and countering the next generation of Linux rootkits using eBPF</a>
-4. <a href="https://doi.org/10.1145/3627703.3629562">Hao Sun, Yiru Xu, Jianzhong Liu, Yuheng Shen, Nan Guan, and Yu Jiang. 2024. Finding Correctness Bugs in eBPF Verifier with Structured and Sanitized Program. </a>
-5. <a href="https://doi.org/10.1145/3658644.3690237">Chaoyuan Peng, Muhui Jiang, Lei Wu, and Yajin Zhou. 2024. Toss a Fault to BpfChecker: Revealing Implementation Flaws for eBPF runtimes with Differential Fuzzing. </a></p>
+<p>里程碑：</p>
+<ol>
+<li>了解Verifier的功能和实现方式，解释Verifier的复杂性以及其中可能存在的漏洞（综述）。</li>
+<li>实战利用2~3个Verifier漏洞，实现系统提权、容器逃逸、系统奔溃等任意两个攻击（实现）。</li>
+<li>（选做）对已有eBPF的自动化漏洞发现程序的复现和改进，尝试发现新的漏洞。</li>
+</ol>
+<p>中期（第10周）完成：综述  </p>
+<p>期末（第16周）完成：实现</p>
+<p>参考文档：</p>
+<ol>
+<li><a href="https://ebpf.io/what-is-ebpf/">What is eBPF？</a></li>
+<li><a href="https://docs.cilium.io/en/stable/bpf/">BPF and XDP Reference Guide</a></li>
+<li><a href="https://defcon.org/html/defcon-29/dc-29-speakers.html#path">Warping Reality - creating and countering the next generation of Linux rootkits using eBPF</a></li>
+<li><a href="https://doi.org/10.1145/3627703.3629562">Hao Sun, Yiru Xu, Jianzhong Liu, Yuheng Shen, Nan Guan, and Yu Jiang. 2024. Finding Correctness Bugs in eBPF Verifier with Structured and Sanitized Program. </a></li>
+<li><a href="https://doi.org/10.1145/3658644.3690237">Chaoyuan Peng, Muhui Jiang, Lei Wu, and Yajin Zhou. 2024. Toss a Fault to BpfChecker: Revealing Implementation Flaws for eBPF runtimes with Differential Fuzzing. </a></li>
+</ol>
 <h2 id="2">2.基于人工智能的代码漏洞检测</h2>
 <p>背景：
 人工开展代码漏洞挖掘费时费力，传统静态漏洞检测能够实现自动化识别可疑漏洞点，但误报率较高且难以检测复杂的上下文漏洞。基于人工智能的漏洞代码检测定位具有理解代码上下文相关性并对特征进行多层概括和抽象的能力，通过模型的自身泛化能力自动检测代码中相似的漏洞，可代替人工开展疑似漏洞确认，有效提高检测效率。</p>
@@ -441,8 +449,8 @@ eBPF Verifier是Linux内核安全的关键组件，程序在加载之前必须�
 <li>理解神经网络模型检测源代码漏洞的技术原理，调研三篇现有源代码漏洞检测工作，综述其核心方法及工作</li>
 <li>实现已有源代码漏洞检测模型，在测试集上提升准确度</li>
 </ol>
-<p>中期（第10周）完成: 综述
-  期末（第16周）完成: 实现</p>
+<p>中期（第10周）完成: 综述</p>
+<p>期末（第16周）完成: 实现</p>
 <p>参考文档：
 1. VulChecker: Graph-based Vulnerability Localization in Source Code
 https://github.com/ymirsky/VulChecker
@@ -456,25 +464,31 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 随着Android应用的广泛使用，开发者为了保护其应用的知识产权和防止被分析，通常会采用加固技术，例如加壳、代码混淆、环境检测等技术。这些技术使得应用的逆向工程和动态分析变得困难，从而增加了安全分析的复杂性。然而，这些技术也可能被恶意应用利用，以逃避安全检测。因此，研究如何检测和对抗这些抗分析技术对于提升Android应用的安全性至关重要。</p>
 <p>描述：
 本项目旨在使同学们了解Android应用分析技术，深入探究Android应用分析中的抗加固技术。</p>
-<p>里程碑：
-1. 了解常见的代码混淆、加壳、环境检测等技术及其实现原理；
-2. （二选一）复现一个现有的去混淆、脱壳或环境对抗的工作（复现）；
-3. （二选一）实现一个能够检测Android应用使用了哪些加固技术的工具（实现）。</p>
-<p>中期（第10周）完成 ：1
-期末 （第16周） 完成：2或3</p>
-<p>参考文档：
-1. Xue, L.; Zhou, H.; Luo, X.; Zhou, Y.; Shi, Y.; Gu, G.; Zhang, F.; Au, M. H. Happer: Unpacking Android Apps via a Hardware-Assisted Approach. In 2021 IEEE Symposium on Security and Privacy (SP); IEEE: San Francisco, CA, USA, 2021; pp 1641–1658. <a href="https://doi.org/10.1109/SP40001.2021.00105">https://doi.org/10.1109/SP40001.2021.00105</a>.
-2. Xue, L.; Zhou, H.; Luo, X.; Yu, L.; Wu, D.; Zhou, Y.; Ma, X. PackerGrind: An Adaptive Unpacking System for Android Apps. IIEEE Trans. Software Eng.2022, 48 (2), 551–570. <a href="https://doi.org/10.1109/TSE.2020.2996433">https://doi.org/10.1109/TSE.2020.2996433</a>.
-3. Kondracki, B.; Azad, B. A.; Miramirkhani, N.; Nikiforakis, N. The Droid Is in the Details: Environment-Aware Evasion of Android Sandboxes. In <em>Proceedings 2022 Network and Distributed System Security Symposium</em>; Internet Society: San Diego, CA, USA, 2022. <a href="https://doi.org/10.14722/ndss.2022.23056">https://doi.org/10.14722/ndss.2022.23056</a>.
-4. Gao, C.; Cai, M.; Yin, S.; Huang, G.; Li, H.; Yuan, W.; Luo, X. Obfuscation-Resilient Android Malware Analysis Based on Complementary Features. IEEE Trans.Inform.Forensic Secur. 2023, 18, 5056–5068. <a href="https://doi.org/10.1109/TIFS.2023.3302509">https://doi.org/10.1109/TIFS.2023.3302509</a>.</p>
+<p>里程碑：</p>
+<ol>
+<li>了解常见的代码混淆、加壳、环境检测等技术及其实现原理；</li>
+<li>（二选一）复现一个现有的去混淆、脱壳或环境对抗的工作（复现）；</li>
+<li>（二选一）实现一个能够检测Android应用使用了哪些加固技术的工具（实现）。</li>
+</ol>
+<p>中期（第10周）完成 ：1</p>
+<p>期末 （第16周） 完成：2或3</p>
+<p>参考文档：</p>
+<ol>
+<li>Xue, L.; Zhou, H.; Luo, X.; Zhou, Y.; Shi, Y.; Gu, G.; Zhang, F.; Au, M. H. Happer: Unpacking Android Apps via a Hardware-Assisted Approach. In 2021 IEEE Symposium on Security and Privacy (SP); IEEE: San Francisco, CA, USA, 2021; pp 1641–1658. <a href="https://doi.org/10.1109/SP40001.2021.00105">https://doi.org/10.1109/SP40001.2021.00105</a>.</li>
+<li>Xue, L.; Zhou, H.; Luo, X.; Yu, L.; Wu, D.; Zhou, Y.; Ma, X. PackerGrind: An Adaptive Unpacking System for Android Apps. IIEEE Trans. Software Eng.2022, 48 (2), 551–570. <a href="https://doi.org/10.1109/TSE.2020.2996433">https://doi.org/10.1109/TSE.2020.2996433</a>.</li>
+<li>Kondracki, B.; Azad, B. A.; Miramirkhani, N.; Nikiforakis, N. The Droid Is in the Details: Environment-Aware Evasion of Android Sandboxes. In <em>Proceedings 2022 Network and Distributed System Security Symposium</em>; Internet Society: San Diego, CA, USA, 2022. <a href="https://doi.org/10.14722/ndss.2022.23056">https://doi.org/10.14722/ndss.2022.23056</a>.</li>
+<li>Gao, C.; Cai, M.; Yin, S.; Huang, G.; Li, H.; Yuan, W.; Luo, X. Obfuscation-Resilient Android Malware Analysis Based on Complementary Features. IEEE Trans.Inform.Forensic Secur. 2023, 18, 5056–5068. <a href="https://doi.org/10.1109/TIFS.2023.3302509">https://doi.org/10.1109/TIFS.2023.3302509</a>.</li>
+</ol>
 <h2 id="4rustc">4.Rust/C跨语言调用分析</h2>
 <p>背景：Rust通常用于比较底层的项目，与C的语言规范相近，因此开发者为避免重写代码会重用C代码，因此会使用跨语言调用机制。如果C语言部分存在问题，或者跨语言接口抽象存在问题，都是难以修复或者滞后修复的。</p>
 <p>描述：因此我们需要分析Rust生态中的library以及面向用户的Rust应用使用跨语言调用的情况，找到真实的CVE，同时设计PoC对CVE进行利用，并给出防护思路。</p>
-<p>里程碑：
-中期（第10周）完成：综述、PoC实现<br />
-期末（第16周）完成：多个PoC，防护思路</p>
-<p>参考文档： 
-1. Cross-Language Attacks, NDSS 22</p>
+<p>里程碑：</p>
+<p>中期（第10周）完成：综述、PoC实现  </p>
+<p>期末（第16周）完成：多个PoC，防护思路</p>
+<p>参考文档： </p>
+<ol>
+<li>Cross-Language Attacks, NDSS 22</li>
+</ol>
 <h2 id="5mcu-rehosting">5.支持多种处理器架构的MCU Rehosting框架</h2>
 <p>背景：
 大多数rehosting框架只支持ARM或x86等常见架构，但在一些特定场景下，有许多非常规架构的固件。例如智能互联网汽车的场景中，有C166，RH850，V850，SH-2A等汽车固件中的特定架构。如何针对这些架构的MCU进行rehosting具有挑战性，也同时是一项研究重点。描述:本项目旨在使同学们深入理解不同架构的MCU如何rehosting，学习和了解architecture-agnostic的MCU rehosting的框架，并在此基础上对固件进行动态分析，例如fuzzing。</p>
@@ -483,13 +497,15 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 2、<a href="">Feng B等人</a>通过外设-接口建模技术，摆脱了MCU固件运行需要依赖多个硬件外设的限制条件，实现了MCU固件的rehosting和动态分析，并发现多个漏洞。请阅读相关论文并进行复现，并发现至少一个crash。
 3、实现对附件固件goodwatch.elf(MCU msp430)的rehosting，并记录运行日志。（该固件由助教提供）
 <em>4、（附加）对附件固件进行动态调试或模糊测试，并尝试进行漏洞挖掘。</em></p>
-<p>里程碑：
-中期（第10周）完成1
-期末（第16周）完成2、3</p>
-<p>参考文档：
-1. Feng B, Mera A, Lu L. {P2IM}: Scalable and hardware-independent firmware testing via automatic peripheral interface modeling[C]//29th USENIX Security Symposium (USENIX Security 20). 2020: 1237-1254.
-2. Chen Z, Thomas S L, Garcia F D. Metaemu: An architecture agnostic rehosting framework for automotive firmware[C]//Proceedings of the 2022 ACM SIGSAC Conference on Computer and Communications Security. 2022: 515-529.
-3. 于颖超, 陈左宁, 甘水滔, 等. 嵌入式设备固件安全分析技术研究[J]. 计算机学报, 2021.</p>
+<p>里程碑：</p>
+<p>中期（第10周）完成1</p>
+<p>期末（第16周）完成2、3</p>
+<p>参考文档：</p>
+<ol>
+<li>Feng B, Mera A, Lu L. {P2IM}: Scalable and hardware-independent firmware testing via automatic peripheral interface modeling[C]//29th USENIX Security Symposium (USENIX Security 20). 2020: 1237-1254.</li>
+<li>Chen Z, Thomas S L, Garcia F D. Metaemu: An architecture agnostic rehosting framework for automotive firmware[C]//Proceedings of the 2022 ACM SIGSAC Conference on Computer and Communications Security. 2022: 515-529.</li>
+<li>于颖超, 陈左宁, 甘水滔, 等. 嵌入式设备固件安全分析技术研究[J]. 计算机学报, 2021.</li>
+</ol>
 <h2 id="6">6.基于大模型生成代码的评估指标设计和测试</h2>
 <p>背景：
 大语言模型（LLMs）在代码生成领域已取得显著进展，涌现出大量（代码）大模型（如Qwen-Coder、DeepSeek-Coder、CodeLlama、Qwen）。这些模型在代码质量、执行效率及多语言支持等方面差异显著。虽然现有热门代码生成评估体系（如LiveCodeBench、HumanEval、MBPP）已提出多维评估指标，但他们大多仅关注<strong>正确性</strong>，却忽略了诸如<strong>安全性、鲁棒性、可靠性、性能、版权与合规性</strong>等<em>其他关键因素</em>，毕竟<strong>可执行代码并不等同于可靠和健壮的代码</strong>。因此，我们首先需要调研现有的热门大模型生成代码评估指标，然后总结<strong>批判</strong>并提出值得改进的地方。比如有人提出评估大模型<strong>滥用API</strong>程度的方法；也有人提出评测代码大模型<strong>效率</strong>的方法。</p>
@@ -500,8 +516,8 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 <li>总结和批判现有热门大模型生成代码评估指标，不低于<strong>5</strong>种（综述）。</li>
 <li><strong>自行设计</strong>不同于热门评估指标的创新指标并<strong>运行</strong>这个指标。设计方面要求在上述<em>其他关键因素</em>中的一个方面创新。可参考开源代码，但不可抄袭。测试集和测试样例（如需）均需<strong>自行设计</strong>，数量<strong>5~10</strong>个即可。被测试的大模型数量不得低于<strong>1</strong>个（实现）。</li>
 </ol>
-<p>中期（第10周）完成：综述
-期末（第16周）完成：实现</p>
+<p>中期（第10周）完成：综述</p>
+<p>期末（第16周）完成：实现</p>
 <p>参考文档：</p>
 <ol>
 <li>DeepSeek-AI, Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu, et al. 2025. “DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.” </li>
@@ -523,11 +539,13 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 <p>如上图所示，MTE同时能防护时空两个维度上的内存损坏漏洞，因此近年来受到工业界和学术界的广泛关注。然而，目前还缺乏可行的基于MTE的对内核内存进行实时保护的方法，由于内核安全的重要性和MTE硬件提供的高性能安全能力，如何将二者有机结合已经成为近年来研究的关注焦点。</p>
 <p>描述：
 本项目旨在使同学们入门硬件辅助安全（Hardware-assisted security）这一热门领域，同时深入了解MTE这一新兴的硬件安全特性。</p>
-<p>里程碑：
-1. 阅读参考文档并收集更多的相关资料和文献，总结MTE的优缺点 (综述)
-2. 成功编译支持MTE的Linux内核并在QEMU上运行，同时运行一个被保护的程序 （实现）。</p>
-<p>中期（第10周）完成：综述<br />
-期末（第16周）完成：实现</p>
+<p>里程碑：</p>
+<ol>
+<li>阅读参考文档并收集更多的相关资料和文献，总结MTE的优缺点 (综述)</li>
+<li>成功编译支持MTE的Linux内核并在QEMU上运行，同时运行一个被保护的程序 （实现）。</li>
+</ol>
+<p>中期（第10周）完成：综述  </p>
+<p>期末（第16周）完成：实现</p>
 <p>参考文档：<br />
 1. <a href="https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Arm_Memory_Tagging_Extension_Whitepaper.pdf">ARM MTE白皮书</a>
 2. <a href="https://juejin.cn/post/7013595058125406238">内存问题的终极武器——MTE</a>
@@ -540,22 +558,28 @@ Arm Mali GPU作为移动设备专用图形处理器，广泛集成于Android智�
 GPU驱动核心功能之一是实现用户态进程与GPU硬件间的共享内存管理。由于涉及复杂的内存分配、映射与同步机制，该模块常成为安全漏洞的高发区域。此类漏洞往往导致内存损坏类风险，且现有防护机制难以有效检测。值得注意的是，Google Project Zero 2021年度报告指出，当年检测到的Android系统7个0-day漏洞中，5个均存在于GPU驱动程序模块。</p>
 <p>描述：
 在前期课程和实验中，大家已掌握了UAF（use-after-free）漏洞基本原理、触发条件及利用方式。本实验要求同学们将UAF漏洞的研究拓展至GPU驱动安全领域，GPU驱动因其直接控制硬件资源的特性（如物理页表管理、内存映射等），成为攻击者突破系统隔离机制的重要目标。通过操控GPU驱动的漏洞，攻击者可能绕过CPU侧的安全防护。</p>
-<p>里程碑：
-1. 通过公开漏洞库、学术论文等资源，自主检索近年公布的与GPU驱动相关的UAF漏洞案例（如内存管理、上下文切换等场景），分析其成因及利用链构造方式。（综述）
-2. 漏洞复现与验证：搭建支持存在漏洞的Mali GPU驱动的虚拟机实验环境，并且在实验环境中尝试复现1-2个漏洞，结合调试工具（如GDB、内核日志等）观察UAF触发时的系统行为，解释漏洞如何通过GPU驱动影响物理内存或内核完整性。（实现）</p>
-<p>中期（第10周）完成：综述<br />
-期末（第16周）完成：实现</p>
-<p>参考文档：
-1. <a href="https://forum.butian.net/share/3924">GPU 驱动漏洞：窥探驱动漏洞利用的技术奥秘</a>
-2. <a href="https://linux-sunxi.org/Mali_Open_Source_Driver">Mali Open Source Driver</a>
-4. <a href="https://github.com/github/securitylab/tree/main">GitHub Security Lab</a>
-2. <a href="https://github.blog/security/vulnerability-research/pwning-the-all-google-phone-with-a-non-google-bug/">The “not-Google” bug in the “all-Google” phone</a></p>
+<p>里程碑：</p>
+<ol>
+<li>通过公开漏洞库、学术论文等资源，自主检索近年公布的与GPU驱动相关的UAF漏洞案例（如内存管理、上下文切换等场景），分析其成因及利用链构造方式。（综述）</li>
+<li>漏洞复现与验证：搭建支持存在漏洞的Mali GPU驱动的虚拟机实验环境，并且在实验环境中尝试复现1-2个漏洞，结合调试工具（如GDB、内核日志等）观察UAF触发时的系统行为，解释漏洞如何通过GPU驱动影响物理内存或内核完整性。（实现）</li>
+</ol>
+<p>中期（第10周）完成：综述  </p>
+<p>期末（第16周）完成：实现</p>
+<p>参考文档：</p>
+<ol>
+<li><a href="https://forum.butian.net/share/3924">GPU 驱动漏洞：窥探驱动漏洞利用的技术奥秘</a></li>
+<li><a href="https://linux-sunxi.org/Mali_Open_Source_Driver">Mali Open Source Driver</a></li>
+<li><a href="https://github.com/github/securitylab/tree/main">GitHub Security Lab</a></li>
+<li><a href="https://github.blog/security/vulnerability-research/pwning-the-all-google-phone-with-a-non-google-bug/">The “not-Google” bug in the “all-Google” phone</a></li>
+</ol>
 <h2 id="9">9.分组和展示</h2>
 <p>本次final project采取自由分组，每组3人。请自行组队，并从给定题目中选择一个，确定分组和选题后，3.30之前将组员名单和选题填写至钉钉群共享文件。
 <strong>注意</strong>：每个题目最多2组选择，同选题小组间需协商确定不同研究方向，避免雷同。</p>
-<p>实验过程中将设置两次检查：
-- 中期检查：根据各自题目要求，提交调研报告，展示调研进展。
-- 期末检查：分组presentation，每组限时15min（10min展示+5min提问），进行调研内容的汇报和结果展示。展示后在“学在浙大”提交PPT。</p>
+<p>实验过程中将设置两次检查：</p>
+<ul>
+<li>中期检查：根据各自题目要求，提交调研报告，展示调研进展。</li>
+<li>期末检查：分组presentation，每组限时15min（10min展示+5min提问），进行调研内容的汇报和结果展示。展示后在“学在浙大”提交PPT。</li>
+</ul>
 
 
 
