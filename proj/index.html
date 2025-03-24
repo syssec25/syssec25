@@ -11,6 +11,8 @@
         <link rel="canonical" href="https://syssec25/proj/">
       
       
+        <link rel="prev" href="../lab1/">
+      
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -18,7 +20,7 @@
     
     
       
-        <title>Final Project 列表与要求 - 浙江大学25年春夏系统安全实验</title>
+        <title>final project - 浙江大学25年春夏系统安全实验</title>
       
     
     
@@ -106,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Final Project 列表与要求
+              final project
             
           </span>
         </div>
@@ -263,6 +265,158 @@
   
 
     
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    final project
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    final project
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11-ebpflinuxrootkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 利用eBPF实现对Linux内核的Rootkit实战
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-ebpfverify" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 eBPF的Verify模块的漏洞发现与利用
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.基于人工智能的代码漏洞检测
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3android" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.Android应用抗加固分析
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4rustc" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.Rust/C跨语言调用分析
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5mcu-rehosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.支持多种处理器架构的MCU Rehosting框架
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.基于大模型生成代码的评估指标设计和测试
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7mte" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.基于MTE的内存完整性保护
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-mali-gpupage-uaf" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Mali GPU中的Page UAF漏洞
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.分组和展示
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -409,7 +563,7 @@ eBPF（Extended Berkeley Packet Filter）是Linux内核在3.18版本引入的一
 <li>理解内核中BPF的作用原理，收集2种已有的eBPF rootkit，阐述其原理（综述）。</li>
 <li>扩展已有eBPF rootkit，实现2种新功能（实现）。</li>
 </ol>
-<p>中期（第10周）完成：综述  </p>
+<p>中期（第11周）完成：综述  </p>
 <p>期末（第16周）完成：实现</p>
 <p>参考文档：</p>
 <ol>
@@ -429,7 +583,7 @@ eBPF Verifier是Linux内核安全的关键组件，程序在加载之前必须�
 <li>实战利用2~3个Verifier漏洞，实现系统提权、容器逃逸、系统奔溃等任意两个攻击（实现）。</li>
 <li>（选做）对已有eBPF的自动化漏洞发现程序的复现和改进，尝试发现新的漏洞。</li>
 </ol>
-<p>中期（第10周）完成：综述  </p>
+<p>中期（第11周）完成：综述  </p>
 <p>期末（第16周）完成：实现</p>
 <p>参考文档：</p>
 <ol>
@@ -449,7 +603,7 @@ eBPF Verifier是Linux内核安全的关键组件，程序在加载之前必须�
 <li>理解神经网络模型检测源代码漏洞的技术原理，调研三篇现有源代码漏洞检测工作，综述其核心方法及工作</li>
 <li>实现已有源代码漏洞检测模型，在测试集上提升准确度</li>
 </ol>
-<p>中期（第10周）完成: 综述</p>
+<p>中期（第11周）完成: 综述</p>
 <p>期末（第16周）完成: 实现</p>
 <p>参考文档：
 1. VulChecker: Graph-based Vulnerability Localization in Source Code
@@ -470,7 +624,7 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 <li>（二选一）复现一个现有的去混淆、脱壳或环境对抗的工作（复现）；</li>
 <li>（二选一）实现一个能够检测Android应用使用了哪些加固技术的工具（实现）。</li>
 </ol>
-<p>中期（第10周）完成 ：1</p>
+<p>中期（第11周）完成 ：1</p>
 <p>期末 （第16周） 完成：2或3</p>
 <p>参考文档：</p>
 <ol>
@@ -483,7 +637,7 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 <p>背景：Rust通常用于比较底层的项目，与C的语言规范相近，因此开发者为避免重写代码会重用C代码，因此会使用跨语言调用机制。如果C语言部分存在问题，或者跨语言接口抽象存在问题，都是难以修复或者滞后修复的。</p>
 <p>描述：因此我们需要分析Rust生态中的library以及面向用户的Rust应用使用跨语言调用的情况，找到真实的CVE，同时设计PoC对CVE进行利用，并给出防护思路。</p>
 <p>里程碑：</p>
-<p>中期（第10周）完成：综述、PoC实现  </p>
+<p>中期（第11周）完成：综述、PoC实现  </p>
 <p>期末（第16周）完成：多个PoC，防护思路</p>
 <p>参考文档： </p>
 <ol>
@@ -500,7 +654,7 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 <li><em>（附加）对附件固件进行动态调试或模糊测试，并尝试进行漏洞挖掘。</em></li>
 </ol>
 <p>里程碑：</p>
-<p>中期（第10周）完成1</p>
+<p>中期（第11周）完成1</p>
 <p>期末（第16周）完成2、3</p>
 <p>参考文档：</p>
 <ol>
@@ -518,7 +672,7 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 <li>总结和批判现有热门大模型生成代码评估指标，不低于<strong>5</strong>种（综述）。</li>
 <li><strong>自行设计</strong>不同于热门评估指标的创新指标并<strong>运行</strong>这个指标。设计方面要求在上述<em>其他关键因素</em>中的一个方面创新。可参考开源代码，但不可抄袭。测试集和测试样例（如需）均需<strong>自行设计</strong>，数量<strong>5~10</strong>个即可。被测试的大模型数量不得低于<strong>1</strong>个（实现）。</li>
 </ol>
-<p>中期（第10周）完成：综述</p>
+<p>中期（第11周）完成：综述</p>
 <p>期末（第16周）完成：实现</p>
 <p>参考文档：</p>
 <ol>
@@ -546,7 +700,7 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 <li>阅读参考文档并收集更多的相关资料和文献，总结MTE的优缺点 (综述)</li>
 <li>成功编译支持MTE的Linux内核并在QEMU上运行，同时运行一个被保护的程序 （实现）。</li>
 </ol>
-<p>中期（第10周）完成：综述  </p>
+<p>中期（第11周）完成：综述  </p>
 <p>期末（第16周）完成：实现</p>
 <p>参考文档：</p>
 <ol>
@@ -567,7 +721,7 @@ GPU驱动核心功能之一是实现用户态进程与GPU硬件间的共享内�
 <li>通过公开漏洞库、学术论文等资源，自主检索近年公布的与GPU驱动相关的UAF漏洞案例（如内存管理、上下文切换等场景），分析其成因及利用链构造方式。（综述）</li>
 <li>漏洞复现与验证：搭建支持存在漏洞的Mali GPU驱动的虚拟机实验环境，并且在实验环境中尝试复现1-2个漏洞，结合调试工具（如GDB、内核日志等）观察UAF触发时的系统行为，解释漏洞如何通过GPU驱动影响物理内存或内核完整性。（实现）</li>
 </ol>
-<p>中期（第10周）完成：综述  </p>
+<p>中期（第11周）完成：综述  </p>
 <p>期末（第16周）完成：实现</p>
 <p>参考文档：</p>
 <ol>
@@ -577,8 +731,8 @@ GPU驱动核心功能之一是实现用户态进程与GPU硬件间的共享内�
 <li><a href="https://github.blog/security/vulnerability-research/pwning-the-all-google-phone-with-a-non-google-bug/">The “not-Google” bug in the “all-Google” phone</a></li>
 </ol>
 <h2 id="9">9.分组和展示</h2>
-<p>本次final project采取自由分组，每组3人。请自行组队，并从给定题目中选择一个，确定分组和选题后，3.30之前将组员名单和选题填写至钉钉群共享文件。
-<strong>注意</strong>：每个题目最多2组选择，同选题小组间需协商确定不同研究方向，避免雷同。</p>
+<p>本次final project采取自由分组，每组3人。请自行组队，并从给定题目中选择一个，确定分组和选题后，3.30之前将组员名单和选题填写至钉钉群共享文件。</p>
+<p><strong>注意</strong>：每个题目最多2组选择，同选题小组间需协商确定不同研究方向，避免雷同。</p>
 <p>实验过程中将设置两次检查：</p>
 <ul>
 <li>中期检查：根据各自题目要求，提交调研报告，展示调研进展。</li>
