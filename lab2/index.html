@@ -1398,7 +1398,7 @@ password：123
 <h3 id="61-task1">6.1 Task1：设备接口的使用。</h3>
 <ul>
 <li>编写程序，尝试使用设备接口。</li>
-<li>尝试利用<strong>章节5.2</strong>的介绍触发 UAF 漏洞，并利用<strong>章节4.4</strong>所提的 <code>/dev/ptmx</code>设备(打开该设备内核会分配一个 <code>tty_struct</code>结构体, 但是因为 Linux 多核的关系，可能需要堆喷技术，多次打开结构体，多次分配，直到分配到我们UAF指针所控制的那块内存空间为止)，尝试控制一个 <code>tty_struct</code> 结构体，并且能够读取和修改所控制的 <code>tty_struct</code> 结构体的内容。（触发过程可能会造成 kernel crash，重启 qemu 即可）。</li>
+<li>尝试利用<strong>章节5.2</strong>的接口触发 UAF 漏洞，并利用<strong>章节4.3</strong>所提的 <code>/dev/ptmx</code>设备(打开该设备内核会分配一个 <code>tty_struct</code>结构体, 但是因为 Linux 多核的关系，可能需要堆喷技术，多次打开结构体，多次分配，直到分配到我们UAF指针所控制的那块内存空间为止)，尝试控制一个 <code>tty_struct</code> 结构体，并且能够读取和修改所控制的 <code>tty_struct</code> 结构体的内容。（触发过程可能会造成 kernel crash，重启 qemu 即可）。</li>
 </ul>
 <blockquote>
 <p>提示🌟：同一个设备符被close之后就不要再使用read等函数了。这里需要想办法保证在能够close的情况下，继续读取，该怎么做呢？</p>
