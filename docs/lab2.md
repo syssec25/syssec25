@@ -255,7 +255,7 @@ user@user-Super-Server:~/Desktop/experiment$ tree
 
 ### 5.1 实验环境搭建
 
-通过浙大云盘[链接](https://pan.zju.edu.cn/share/020138858d0479ba0a1906893b)下载本次实验压缩包，并解压到lab1的 virtual box 实验镜像中。
+通过浙大云盘[链接](https://pan.zju.edu.cn/share/913fb168cf0dc795da62abe451)或百度网盘[链接](https://pan.baidu.com/s/1fu6NFVSgFaL3mt4ivRi6Ug?pwd=9egt)下载本次实验压缩包，并解压到lab1的 virtual box 实验镜像中。
 
 解压之后路径如下
 
