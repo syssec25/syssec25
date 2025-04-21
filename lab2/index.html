@@ -1406,7 +1406,7 @@ password：123
 <p>提示：tty_struct 结构体里有些字段比较特殊。</p>
 </blockquote>
 <h3 id="62-task2root-shell">6.2 Task2：简单获取root shell</h3>
-<p>为了方便同学们获得 root 权限的 shell，本实验在内核中提供一个预先设置的函数 <code>hack_cred</code>，其定义如下所示，可以直接利用<strong>章节4.4</strong>所提的 <code>/dev/ptmx</code>设备,想办法劫持控制流，使其运行该函数获取 root 权限。</p>
+<p>为了方便同学们获得 root 权限的 shell，本实验在内核中提供一个预先设置的函数 <code>hack_cred</code>，其定义如下所示，可以直接利用<strong>章节4.3</strong>所提的 <code>/dev/ptmx</code>设备,想办法劫持控制流，使其运行该函数获取 root 权限。</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
 <span class="normal">3</span>
